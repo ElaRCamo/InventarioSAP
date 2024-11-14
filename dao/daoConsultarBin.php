@@ -1,7 +1,7 @@
 <?php
 include_once('connection.php');
-consultarParte();
-function consultarParte(){
+consultarBin();
+function consultarBin(){
     $con = new LocalConector();
     $conexion=$con->conectar();
 
