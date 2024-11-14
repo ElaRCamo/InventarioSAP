@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Validar datos
             if (empty($GrammerNo) || empty($Descripcion) || empty($UM) || empty($ProfitCtr) || empty($Costo) || empty($Por)) {
-                $errores[] = "Faltan datos para el registro ID: $GrammerNo. Descripcion: .$Descripcion. UM: $UM ProfitCtr: $ProfitCtr Costo: $Costo Por: $Por ";
+                $errores[] = "Faltan datos para el registro ID: $GrammerNo, Descripcion: $Descripcion, UM: $UM, ProfitCtr: $ProfitCtr, Costo: $Costo, Por: $Por ";
                 $todosExitosos = false;
             } else {
                 // Llamar a la función de actualización con la fecha en el formato correcto
