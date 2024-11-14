@@ -58,7 +58,7 @@ function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo
 
             $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`)
                                                     VALUES (?,?,?,?,?,?)");
-            $insertParte->bind_param("ssssfi", $GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo, $Por);
+            $insertParte->bind_param("sssssi", $GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo, $Por);
             $resultado = $insertParte->execute();
 
             if (!$resultado) {
