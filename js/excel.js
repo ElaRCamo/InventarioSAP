@@ -35,17 +35,17 @@ function cargarDatosParte() {
         });
 }
 /******************Cargar e insertar datos de Excel*******************/
-document.getElementById('btnInsertarPrestamosExcel').addEventListener('click', () => {
-    document.getElementById('fileInputPrestamos').click();
+document.getElementById('btnExcelParte').addEventListener('click', () => {
+    document.getElementById('fileInputParte').click();
 });
 
-document.getElementById('fileInputPrestamos').addEventListener('change', (event) => {
+document.getElementById('fileInputParte').addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
-        insertarExcelPrestamos(file);
+        insertarExcelParte(file);
     }
 });
-async function insertarExcelPrestamos(file) {
+async function insertarExcelParte(file) {
     try {
         // Leer el archivo Excel
         const data = await file.arrayBuffer();
@@ -54,22 +54,24 @@ async function insertarExcelPrestamos(file) {
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
         // Mapear los datos, asegurándonos de convertir las fechas correctamente
-        const prestamosData = jsonData.slice(1).map((row) => {
+        const parteData = jsonData.slice(1).map((row) => {
             return {
-                idSolicitud: row[0],
-                montoDepositado: row[1],
-                // Convertir la fecha usando excelDateToJSDate
-                fechaDeposito: excelDateToJSDate(row[2])
+                GrammerNo: row[0],
+                Descripcion: row[1],
+                UM: row[2],
+                ProfitCtr: row[3],
+                Costo: row[4],
+                Por: row[5]
             };
         });
 
         // Enviar los datos al backend
-        const response = await fetch('https://grammermx.com/RH/CajitaGrammer/dao/daoActualizarPrestamosExcel.php', {
+        const response = await fetch('dao/daoInsertarParte.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ prestamos: prestamosData })
+            body: JSON.stringify({ parteDatos: parteData })
         });
 
         // Obtener la respuesta del backend
@@ -82,7 +84,7 @@ async function insertarExcelPrestamos(file) {
                 text: result.message
             });
 
-            initDataTablePresAdmin(anioActual);
+            cargarDatosParte();
         } else {
             // Mostrar el mensaje de error que viene del backend
             throw new Error(result.message );
