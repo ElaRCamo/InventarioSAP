@@ -5,7 +5,7 @@ function consultarParte(){
     $con = new LocalConector();
     $conexion=$con->conectar();
 
-    $consP="SELECT GammerNo,Descripcion,UM, ProfitCtr, Costo,Por FROM Parte";
+    $consP="SELECT GrammerNo,Descripcion,UM, ProfitCtr, Costo,Por FROM Parte";
     $rsconsPro=mysqli_query($conexion,$consP);
 
     mysqli_close($conexion);

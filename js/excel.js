@@ -12,7 +12,7 @@ function cargarDatosParte() {
 
                     // Crear celdas para cada columna
                     row.innerHTML = `
-                            <td>${parte.GammerNo}</td>
+                            <td>${parte.GrammerNo}</td>
                             <td>${parte.Descripcion}</td>
                             <td>${parte.UM}</td>
                             <td>${parte.ProfitCtr}</td>

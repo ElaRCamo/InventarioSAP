@@ -41,7 +41,7 @@
                     <table class="table table-striped table-bordered mt-3" id="tablaParte">
                         <thead>
                         <tr>
-                            <th>GammerNo</th>
+                            <th>GrammerNo</th>
                             <th>Descripcion</th>
                             <th>UM</th>
                             <th>ProfitCtr</th>
