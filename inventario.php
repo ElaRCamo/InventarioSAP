@@ -76,6 +76,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         cargarDatosParte();
+        cargarDatosBin();
     });
 </script>
 
