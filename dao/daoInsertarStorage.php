@@ -80,7 +80,7 @@ function insertarRegistrosStorage($id_StorageUnit, $Numero_Parte, $Cantidad, $St
 
         } else {
             // Si no existe, insertar el nuevo registro
-            $insertParte = $conex->prepare("INSERT INTO `Storage_Unit` (`id_StorageUnit`,`Numero_Parte`, `Cantidad`, `Storage_Bin`, `Storage_Bin`) 
+            $insertParte = $conex->prepare("INSERT INTO `Storage_Unit` (`id_StorageUnit`,`Numero_Parte`, `Cantidad`, `Storage_Bin`, `Storage_Type`) 
                                             VALUES (?, ?, ?, ?, ?)");
             $insertParte->bind_param("issss", $id_StorageUnit, $Numero_Parte, $Cantidad, $Storage_Bin, $Storage_Type);
 
