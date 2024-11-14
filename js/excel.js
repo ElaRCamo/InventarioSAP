@@ -8,16 +8,19 @@ function cargarDatosBin() {
             const tableBody = document.getElementById('bodyBin');
             tableBody.innerHTML = ''; // Limpiar el contenido anterior
 
-            // Verificar si hay datos en "data"
-            if (data && data.data) {
+            // Verificar si hay datos en "data" y que "data.data" sea un array
+            if (data && Array.isArray(data.data) && data.data.length > 0) {
                 data.data.forEach(bin => {
                     const row = document.createElement('tr');
 
-                    // Crear celdas para cada columna
-                    row.innerHTML = `
-                            <td>${bin.StBin}</td>
-                            <td>${bin.StType}</td>
-                        `;
+                    // Crear celdas para cada columna usando createElement
+                    const cell1 = document.createElement('td');
+                    cell1.textContent = bin.StBin;
+                    row.appendChild(cell1);
+
+                    const cell2 = document.createElement('td');
+                    cell2.textContent = bin.StType;
+                    row.appendChild(cell2);
 
                     // Agregar la fila a la tabla
                     tableBody.appendChild(row);
@@ -25,7 +28,11 @@ function cargarDatosBin() {
             } else {
                 // Si no hay datos, mostrar un mensaje en la tabla
                 const row = document.createElement('tr');
-                row.innerHTML = '<td colspan="2" class="text-center">No hay datos disponibles</td>';
+                const cell = document.createElement('td');
+                cell.colSpan = 2;
+                cell.classList.add('text-center');
+                cell.textContent = 'No hay datos disponibles';
+                row.appendChild(cell);
                 tableBody.appendChild(row);
             }
         })
@@ -33,6 +40,7 @@ function cargarDatosBin() {
             console.error('Error al cargar los datos:', error);
         });
 }
+
 /******************Cargar e insertar datos de Excel*******************/
 document.getElementById('btnExcelBin').addEventListener('click', () => {
     document.getElementById('fileInputBin').click();
