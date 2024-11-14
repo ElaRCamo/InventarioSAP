@@ -23,6 +23,32 @@
 <body>
 <main>
 
+    <section class="tabla-section" id="sectionInventario">
+        <div class=""></div>
+        <div class="container">
+            <div class="row">
+                <div class="container mt-5">
+                    <h2 class="text-center">Tabla Inventario</h2>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelInventario"> Cargar Archivo</button>
+                    <input type="file" id="fileInputInventario" accept=".xlsx, .xls" style="display: none;" />
+                    <table class="table table-striped table-bordered mt-3" id="tablaInventario">
+                        <thead>
+                        <tr>
+                            <th>STLocation</th>
+                            <th>StBin</th>
+                            <th>StType</th>
+                            <th>GrammerNo</th>
+                            <th>Cantidad</th>
+                            <th>AreaCve</th>
+                        </tr>
+                        </thead>
+                        <tbody id="bodyInventario"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="tabla-section" id="sectionBin">
         <div class=""></div>
         <div class="container">
@@ -75,8 +101,8 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        cargarDatosParte();
-        cargarDatosBin();
+        //cargarDatosParte();
+        //cargarDatosBin();
     });
 </script>
 

@@ -1,4 +1,111 @@
 /**********************************************************************************************************************/
+/********************************************************TABLA INVENTARIO***************************************************/
+/**********************************************************************************************************************/
+
+function cargarDatosInventario() {
+        fetch('dao/daoConsultarInventario.php')
+            .then(response => response.json())
+            .then(data => {
+                const tableBody = document.getElementById('bodyInventario');
+                tableBody.innerHTML = ''; // Limpiar el contenido anterior
+
+                // Verificar si hay datos en "data"
+                if (data && data.data) {
+                    data.data.forEach(inventario => {
+                        const row = document.createElement('tr');
+
+                        // Crear celdas para cada columna
+                        row.innerHTML = `
+                            <td>${inventario.STLocation}</td>
+                            <td>${inventario.StBin}</td>
+                            <td>${inventario.StType}</td>
+                            <td>${inventario.GrammerNo}</td>
+                            <td>${inventario.Cantidad}</td>
+                            <td>${inventario.AreaCve}</td>
+                        `;
+
+                        // Agregar la fila a la tabla
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    // Si no hay datos, mostrar un mensaje en la tabla
+                    const row = document.createElement('tr');
+                    row.innerHTML = '<td colspan="6" class="text-center">No hay datos disponibles</td>';
+                    tableBody.appendChild(row);
+                }
+            })
+            .catch(error => {
+                console.error('Error al cargar los datos:', error);
+            });
+    }
+
+/******************Cargar e insertar datos de Excel*******************/
+document.getElementById('btnExcelInventario').addEventListener('click', () => {
+    document.getElementById('fileInputInventario').click();
+});
+
+document.getElementById('fileInputInventario').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        insertarExcelInventario(file);
+    }
+});
+async function insertarExcelInventario(file) {
+    try {
+        // Leer el archivo Excel
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        // Mapear los datos, asegurándonos de convertir las fechas correctamente
+        const inventarioData = jsonData.slice(1).map((row) => {
+            return {
+                STLocation: row[0],
+                StBin: row[1],
+                StType: row[2],
+                GrammerNo: row[3],
+                Cantidad: row[4],
+                AreaCve: row[5]
+            };
+        });
+
+        // Enviar los datos al backend
+        const response = await fetch('dao/daoInsertarInventario.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ inventarioDatos: inventarioData })
+        });
+
+        // Obtener la respuesta del backend
+        const result = await response.json();
+
+        if (result.status === "success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualización exitosa',
+                text: result.message
+            });
+
+            cargarDatosInventario();
+        } else {
+            // Mostrar el mensaje de error que viene del backend
+            throw new Error(result.message );
+        }
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Ocurrió un error al procesar el archivo. Recargue la página e intente nuevamente.'
+        });
+    }
+}
+
+
+/**********************************************************************************************************************/
 /********************************************************TABLA BIN***************************************************/
 /**********************************************************************************************************************/
 function cargarDatosBin() {
