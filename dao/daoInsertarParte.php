@@ -51,26 +51,26 @@ echo json_encode($respuesta);
 function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo, $Por ) {
     $con = new LocalConector();
     $conex = $con->conectar();
+    /*
+        $conex->begin_transaction();
 
-    $conex->begin_transaction();
+        try {
 
-    try {
+            $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`)
+                                                    VALUES (?,?,?,?,?,?)");
+            $insertParte->bind_param("ssssfi", $GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo, $Por);
+            $resultado = $insertParte->execute();
 
-        $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`) 
-                                                VALUES (?,?,?,?,?,?)");
-        $insertParte->bind_param("ssssfi", $GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo, $Por);
-        $resultado = $insertParte->execute();
-
-        if (!$resultado) {
-            $respuesta = array('status' => 'error', 'message' => 'Error en la BD al insertar el registro con GrammerNo: '.$GrammerNo);
-        }
-    } catch (Exception $e) {
-        // Deshacer la transacción en caso de error
-        $conex->rollback();
-        $respuesta = array("status" => 'error', "message" => $e->getMessage());
-    } finally {
-        $conex->close();
-    }
-    return $respuesta;
+            if (!$resultado) {
+                $respuesta = array('status' => 'error', 'message' => 'Error en la BD al insertar el registro con GrammerNo: '.$GrammerNo);
+            }
+        } catch (Exception $e) {
+            // Deshacer la transacción en caso de error
+            $conex->rollback();
+            $respuesta = array("status" => 'error', "message" => $e->getMessage());
+        } finally {
+            $conex->close();
+        }*/
+    return array("status" => 'error', "message" => "conexion BD");
 }
 ?>
