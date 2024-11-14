@@ -83,7 +83,7 @@ function insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $
             // Si no existe, insertar el nuevo registro
             $insertParte = $conex->prepare("INSERT INTO  `InventarioSap` (`STLocation`, `STBin`, `STType`, `GrammerNo`, `Cantidad`, `AreaCve`)
                                             VALUES (?, ?, ?, ?, ?, ?)");
-            $insertParte->bind_param("isssss", $GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por);
+            $insertParte->bind_param("isssss", $STLocation, $StBin, $StType, $GrammerNo, $Cantidad, $AreaCve);
 
             $resultado = $insertParte->execute();
 
