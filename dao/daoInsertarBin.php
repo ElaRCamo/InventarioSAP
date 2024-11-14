@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if ($StBin === null || $StType === null) {
                 $errores[] = "Faltan datos para el registro StBin: $StBin, StType: $StType";
                 $todosExitosos = false;
+                break;
             } else {
                 // Llamar a la función de inserción
                 $respuestaInsert = insertarRegistrosBin($StBin, $StType);
@@ -31,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Respuesta final si todos fueron exitosos
         if ($todosExitosos) {
-            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Bin fueron insertados correctamente.");
+            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Bin fueron actualizados correctamente.");
         } else {
             $respuesta = array("status" => 'error', "message" => "Se encontraron errores al insertar los registros.", "detalles" => $errores);
         }
@@ -85,7 +86,6 @@ function insertarRegistrosBin($StBin, $StType) {
                 $conex->commit();
                 $respuesta = array('status' => 'success', 'message' => 'Registro insertado correctamente.');
             }
-
             $insertBin->close();
         }
 
