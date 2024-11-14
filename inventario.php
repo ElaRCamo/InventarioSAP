@@ -23,6 +23,28 @@
 <body>
 <main>
 
+    <section class="tabla-section" id="sectionBin">
+        <div class=""></div>
+        <div class="container">
+            <div class="row">
+                <div class="container mt-5">
+                    <h2 class="text-center">Tabla Bin</h2>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelBin"> Cargar Archivo</button>
+                    <input type="file" id="fileInputBin" accept=".xlsx, .xls" style="display: none;" />
+                    <table class="table table-striped table-bordered mt-3" id="tablaBin">
+                        <thead>
+                        <tr>
+                            <th>StBin</th>
+                            <th>StType</th>
+                        </tr>
+                        </thead>
+                        <tbody id="bodyBin"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="tabla-section" id="sectionParte">
         <div class=""></div>
         <div class="container">
