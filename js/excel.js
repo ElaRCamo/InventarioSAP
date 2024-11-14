@@ -1,3 +1,107 @@
+
+/**********************************************************************************************************************/
+/********************************************************TABLA STORAGE***************************************************/
+/**********************************************************************************************************************/
+function cargarDatosStorage() {
+    fetch('dao/daoConsultarStorage.php')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('bodyPStorage');
+            tableBody.innerHTML = ''; // Limpiar el contenido anterior
+
+            // Verificar si hay datos en "data"
+            if (data && data.data) {
+                data.data.forEach(storage => {
+                    const row = document.createElement('tr');
+
+                    // Crear celdas para cada columna
+                    row.innerHTML = `
+                            <td>${storage.id_StorageUnit}</td>
+                            <td>${storage.Numero_Parte}</td>
+                            <td>${storage.Cantidad}</td>
+                            <td>${storage.Storage_Bin}</td>
+                            <td>${storage.Storage_Type}</td>
+                        `;
+
+                    // Agregar la fila a la tabla
+                    tableBody.appendChild(row);
+                });
+            } else {
+                // Si no hay datos, mostrar un mensaje en la tabla
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="5" class="text-center">No hay datos disponibles</td>';
+                tableBody.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar los datos:', error);
+        });
+}
+/******************Cargar e insertar datos de Excel*******************/
+document.getElementById('btnExcelStorage').addEventListener('click', () => {
+    document.getElementById('fileInputStorage').click();
+});
+
+document.getElementById('fileInputStorage').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        insertarExcelStorage(file);
+    }
+});
+async function insertarExcelStorage(file) {
+    try {
+        // Leer el archivo Excel
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        // Mapear los datos, asegurándonos de convertir las fechas correctamente
+        const storageData = jsonData.slice(1).map((row) => {
+            return {
+                id_StorageUnit: row[0],
+                Numero_Parte: row[1],
+                Cantidad: row[2],
+                Storage_Bin: row[3],
+                Storage_Type: row[4]
+            };
+        });
+
+        // Enviar los datos al backend
+        const response = await fetch('dao/daoInsertarStorage.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ storageDatos: storageData })
+        });
+
+        // Obtener la respuesta del backend
+        const result = await response.json();
+
+        if (result.status === "success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualización exitosa',
+                text: result.message
+            });
+
+            cargarDatosStorage();
+        } else {
+            // Mostrar el mensaje de error que viene del backend
+            throw new Error(result.message );
+        }
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Ocurrió un error al procesar el archivo. Recargue la página e intente nuevamente.'
+        });
+    }
+}
+
+
 /**********************************************************************************************************************/
 /********************************************************TABLA INVENTARIO***************************************************/
 /**********************************************************************************************************************/
