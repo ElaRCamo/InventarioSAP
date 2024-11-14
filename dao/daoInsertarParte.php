@@ -109,40 +109,4 @@ function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr, $Cost
 
     return $respuesta;
 }
-
-
-
-/*
- function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por) {
-    $con = new LocalConector();
-    $conex = $con->conectar();
-
-    $conex->begin_transaction();
-
-    try {
-        $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`)
-                                        VALUES (?, ?, ?, ?, ?, ?)");
-        $insertParte->bind_param("sssssi", $GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por);
-
-        $resultado = $insertParte->execute();
-
-        if (!$resultado) {
-            $conex->rollback();
-            $respuesta = array('status' => 'error', 'message' => 'Error en la BD al insertar el registro con GrammerNo: ' . $GrammerNo);
-        } else {
-            $conex->commit();
-            $respuesta = array('status' => 'success');
-        }
-
-        $insertParte->close();
-    } catch (Exception $e) {
-        $conex->rollback();
-        $respuesta = array("status" => 'error', "message" => $e->getMessage());
-    } finally {
-        $conex->close();
-    }
-
-    return $respuesta;
-}
- */
 ?>
