@@ -29,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if ($respuestaInsert['status'] !== 'success') {
                     $errores[] = "Error al insertar el registro ID: $GrammerNo. " . $respuestaInsert['message'];
                     $todosExitosos = false;
+                    break;
                 }
             }
         }
@@ -48,31 +49,44 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 echo json_encode($respuesta);
 
-function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo, $Por ) {
+function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por) {
     $con = new LocalConector();
     $conex = $con->conectar();
 
-        $conex->begin_transaction();
+    // Forzar los tipos para asegurar compatibilidad con bind_param
+    $Costo = (float)$Costo;
 
-        try {
+    $conex->begin_transaction();
 
-            $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`)
-                                                    VALUES (?,?,?,?,?,?)");
-            $insertParte->bind_param("sssssi", $GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo, $Por);
-            $resultado = $insertParte->execute();
+    try {
+        $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`) 
+                                        VALUES (?, ?, ?, ?, ?, ?)");
 
-            if (!$resultado) {
-                $respuesta = array('status' => 'error', 'message' => 'Error en la BD al insertar el registro con GrammerNo: '.$GrammerNo);
-            }else{
-                $respuesta = array('status' => 'success');
-            }
-        } catch (Exception $e) {
-            // Deshacer la transacción en caso de error
-            $conex->rollback();
-            $respuesta = array("status" => 'error', "message" => $e->getMessage());
-        } finally {
-            $conex->close();
+        if (!$insertParte) {
+            throw new Exception("Error en la preparación de la consulta: " . $conex->error);
         }
+
+        $insertParte->bind_param("ssssfi", $GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por);
+
+        $resultado = $insertParte->execute();
+
+        if (!$resultado) {
+            $conex->rollback();
+            $respuesta = array('status' => 'error', 'message' => 'Error en la BD al insertar el registro con GrammerNo: ' . $GrammerNo);
+        } else {
+            $conex->commit();
+            $respuesta = array('status' => 'success');
+        }
+
+        $insertParte->close();
+    } catch (Exception $e) {
+        $conex->rollback();
+        $respuesta = array("status" => 'error', "message" => $e->getMessage());
+    } finally {
+        $conex->close();
+    }
+
     return $respuesta;
 }
+
 ?>
