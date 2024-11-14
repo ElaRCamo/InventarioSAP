@@ -53,20 +53,12 @@ function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr, $Cost
     $con = new LocalConector();
     $conex = $con->conectar();
 
-    // Forzar los tipos para asegurar compatibilidad con bind_param
-    $Costo = (float)$Costo;
-
     $conex->begin_transaction();
 
     try {
         $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`) 
                                         VALUES (?, ?, ?, ?, ?, ?)");
-
-        if (!$insertParte) {
-            throw new Exception("Error en la preparación de la consulta: " . $conex->error);
-        }
-
-        $insertParte->bind_param("ssssfi", $GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por);
+        $insertParte->bind_param("sssssi", $GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por);
 
         $resultado = $insertParte->execute();
 
