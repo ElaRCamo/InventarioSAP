@@ -72,7 +72,7 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <!-- JAVASCRIPT FILES -->
-<script src="../js/excel.js"></script>
+<script src="js/excel.js"></script>
 
 <!-- DataTable -->
 <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
