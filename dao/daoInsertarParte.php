@@ -51,7 +51,7 @@ echo json_encode($respuesta);
 function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo, $Por ) {
     $con = new LocalConector();
     $conex = $con->conectar();
-    /*
+
         $conex->begin_transaction();
 
         try {
@@ -63,6 +63,8 @@ function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo
 
             if (!$resultado) {
                 $respuesta = array('status' => 'error', 'message' => 'Error en la BD al insertar el registro con GrammerNo: '.$GrammerNo);
+            }else{
+                $respuesta = array('status' => 'success');
             }
         } catch (Exception $e) {
             // Deshacer la transacción en caso de error
@@ -70,7 +72,7 @@ function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo
             $respuesta = array("status" => 'error', "message" => $e->getMessage());
         } finally {
             $conex->close();
-        }*/
-    return array("status" => 'error', "message" => "conexion BD");
+        }
+    return $respuesta;
 }
 ?>
