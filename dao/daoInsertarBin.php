@@ -52,8 +52,8 @@ function insertarRegistrosBin($StBin, $StType) {
 
     try {
         // Consultar si el registro ya existe
-        $consultaExistente = $conex->prepare("SELECT 1 FROM `Bin` WHERE `StBin` = ? AND `StType` = ?");
-        $consultaExistente->bind_param("ss", $StBin, $StType);
+        $consultaExistente = $conex->prepare("SELECT * FROM `Bin` WHERE `StBin` = ?");
+        $consultaExistente->bind_param("s", $StBin);
         $consultaExistente->execute();
         $consultaExistente->store_result();
 
@@ -86,6 +86,7 @@ function insertarRegistrosBin($StBin, $StType) {
                 $conex->commit();
                 $respuesta = array('status' => 'success', 'message' => 'Registro insertado correctamente.');
             }
+
             $insertBin->close();
         }
 
