@@ -28,7 +28,7 @@
         <div class="container">
             <div class="row">
                 <div class="container mt-5">
-                    <h2 class="text-center">Tabla Inventario</h2>
+                    <h2 class="text-center">Tabla Storage</h2>
                     <button class="btn btn-secondary text-right btnExcel" id="btnExcelStorage"> Cargar Archivo</button>
                     <input type="file" id="fileInputStorage" accept=".xlsx, .xls" style="display: none;" />
                     <table class="table table-striped table-bordered mt-3" id="tablaStorage">
