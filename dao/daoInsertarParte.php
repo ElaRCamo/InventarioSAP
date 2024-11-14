@@ -1,6 +1,7 @@
 <?php
 include_once('connection.php');
 
+file_put_contents('log.txt', "Método: " . $_SERVER["REQUEST_METHOD"] . "\n", FILE_APPEND);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Decodificar el cuerpo JSON
