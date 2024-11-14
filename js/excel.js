@@ -1,5 +1,5 @@
 function cargarDatosParte() {
-    fetch('../dao/daoConsultarParte.php')
+    fetch('dao/daoConsultarParte.php')
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('bodyParte');
