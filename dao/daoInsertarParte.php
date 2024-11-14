@@ -53,10 +53,74 @@ function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr, $Cost
     $con = new LocalConector();
     $conex = $con->conectar();
 
+    // Iniciar transacción
     $conex->begin_transaction();
 
     try {
-        $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`) 
+        // Consultar si el registro ya existe
+        $consultaExistente = $conex->prepare("SELECT * FROM `Parte` WHERE `GrammerNo` = ?");
+        $consultaExistente->bind_param("s", $GrammerNo);
+        $consultaExistente->execute();
+        $consultaExistente->store_result();
+
+        if ($consultaExistente->num_rows > 0) {
+            // Si ya existe, se actualiza el registro
+            $updateParte = $conex->prepare("UPDATE `Parte` SET `Descripcion` = ?, `UM` = ?, `ProfitCtr` = ?, `Costo` = ?, `Por` = ? WHERE `GrammerNo` = ?");
+            $updateParte->bind_param("ssssis", $Descripcion, $UM, $ProfitCtr, $Costo, $Por, $GrammerNo);
+            $resultado = $updateParte->execute();
+
+            if (!$resultado) {
+                $conex->rollback();
+                $respuesta = array('status' => 'error', 'message' => 'Error al actualizar el registro con GrammerNo: ' . $GrammerNo);
+            } else {
+                $conex->commit();
+                $respuesta = array('status' => 'success', 'message' => 'Registro actualizado correctamente.');
+            }
+
+            $updateParte->close();
+
+        } else {
+            // Si no existe, insertar el nuevo registro
+            $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`) 
+                                            VALUES (?, ?, ?, ?, ?, ?)");
+            $insertParte->bind_param("sssssi", $GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por);
+
+            $resultado = $insertParte->execute();
+
+            if (!$resultado) {
+                $conex->rollback();
+                $respuesta = array('status' => 'error', 'message' => 'Error en la BD al insertar el registro con GrammerNo: ' . $GrammerNo);
+            } else {
+                $conex->commit();
+                $respuesta = array('status' => 'success', 'message' => 'Registro insertado correctamente.');
+            }
+
+            $insertParte->close();
+        }
+
+        $consultaExistente->close();
+
+    } catch (Exception $e) {
+        $conex->rollback();
+        $respuesta = array("status" => 'error', "message" => $e->getMessage());
+    } finally {
+        $conex->close();
+    }
+
+    return $respuesta;
+}
+
+
+
+/*
+ function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por) {
+    $con = new LocalConector();
+    $conex = $con->conectar();
+
+    $conex->begin_transaction();
+
+    try {
+        $insertParte = $conex->prepare("INSERT INTO `Parte` (`GrammerNo`, `Descripcion`, `UM`, `ProfitCtr`, `Costo`, `Por`)
                                         VALUES (?, ?, ?, ?, ?, ?)");
         $insertParte->bind_param("sssssi", $GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por);
 
@@ -80,5 +144,5 @@ function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr, $Cost
 
     return $respuesta;
 }
-
+ */
 ?>
