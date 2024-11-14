@@ -1,7 +1,6 @@
 <?php
 include_once('connection.php');
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Decodificar el cuerpo JSON
     $inputData = json_decode(file_get_contents("php://input"), true);
@@ -19,17 +18,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $Costo = isset($registroParte['Costo']) ? trim($registroParte['Costo']) : null;
             $Por = isset($registroParte['Por']) ? trim($registroParte['Por']) : null;
 
-            // Validar datos
-            if (empty($GrammerNo) || empty($Descripcion) || empty($UM) || empty($ProfitCtr) || empty($Costo) || empty($Por)) {
-                $errores[] = "Faltan datos para el registro ID: $GrammerNo, Descripcion: $Descripcion, UM: $UM, ProfitCtr: $ProfitCtr, Costo: $Costo, Por: $Por ";
+            // Validar que los datos esenciales no sean nulos o vacíos
+            if ($GrammerNo === null || $Descripcion === null || $UM === null || $ProfitCtr === null || $Costo === null || $Por === null) {
+                $errores[] = "Faltan datos para el registro GrammerNo: $GrammerNo, Descripcion: $Descripcion, UM: $UM, ProfitCtr: $ProfitCtr, Costo: $Costo, Por: $Por ";
                 $todosExitosos = false;
             } else {
-                // Llamar a la función de actualización con la fecha en el formato correcto
-                $respuestaInsert = insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr,$Costo, $Por );
+                // Llamar a la función de inserción
+                $respuestaInsert = insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por);
                 if ($respuestaInsert['status'] !== 'success') {
                     $errores[] = "Error al insertar el registro ID: $GrammerNo. " . $respuestaInsert['message'];
                     $todosExitosos = false;
-                    break;
+                    break;  // Salir del ciclo si ocurre un error
                 }
             }
         }
@@ -48,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 echo json_encode($respuesta);
+
 
 function insertarRegistrosParte($GrammerNo, $Descripcion, $UM, $ProfitCtr, $Costo, $Por) {
     $con = new LocalConector();
