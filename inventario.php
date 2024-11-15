@@ -23,6 +23,39 @@
 <body>
 <main>
 
+    <section class="tabla-section" id="sectionBitacora">
+        <div class=""></div>
+        <div class="container">
+            <div class="row">
+                <div class="container mt-5">
+                    <h2 class="text-center">Tabla Bitacora</h2>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelBitacora"> Cargar Excel Bitacora</button>
+                    <input type="file" id="fileInputBitacora" accept=".xlsx, .xls" style="display: none;" />
+                    <table class="table table-striped table-bordered mt-3" id="tablaBitacora">
+                        <thead>
+                        <tr>
+                            <th>Id_Bitacora</th>
+                            <th>NumeroParte</th>
+                            <th>FolioMarbete</th>
+                            <th>Fecha</th>
+                            <th>Usuario</th>
+                            <th>Estatus</th>
+                            <th>PrimerConteo</th>
+                            <th>SegundoConteo</th>
+                            <th>TercerConteo</th>
+                            <th>Comentario</th>
+                            <th>StorageBin</th>
+                            <th>StorageType</th>
+                            <th>Area</th>
+                        </tr>
+                        </thead>
+                        <tbody id="bodyBitacora"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="tabla-section" id="sectionArea">
         <div class=""></div>
         <div class="container">
