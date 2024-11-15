@@ -75,11 +75,11 @@ function insertarRegistrosArea($AreaNombre, $AreaProduccion, $StLocation, $StBin
         } else {
 
             if($StBin === "" || $StBin === null){
-                $StBin = "N/A";
+                $StBin = "";
             }
 
             if($StLocation === "" || $StLocation === null){
-                $StBin = "";
+                $StLocation = "";
             }
 
             // Si no existe, insertar el nuevo registro
