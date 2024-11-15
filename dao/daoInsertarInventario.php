@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $AreaCve = isset($registroInventario['AreaCve']) ? trim($registroInventario['AreaCve']) : null;
 
             // Validar que los datos esenciales no sean nulos o vacíos
-            if ($GrammerNo === null || $STLocation === null || $StBin === null || $StType === null || $Cantidad === null || $AreaCve === null) {
+            if ($GrammerNo === null || $STLocation === null || $Cantidad === null || $AreaCve === null) {
                 $errores[] = "Faltan datos para el registro GrammerNo: $GrammerNo, STLocation: $STLocation, StBin: $StBin, StType: $StType, Cantidad: $Cantidad, AreaCve: $AreaCve ";
                 $todosExitosos = false;
             } else {
