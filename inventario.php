@@ -23,6 +23,31 @@
 <body>
 <main>
 
+    <section class="tabla-section" id="sectionArea">
+        <div class=""></div>
+        <div class="container">
+            <div class="row">
+                <div class="container mt-5">
+                    <h2 class="text-center">Tabla Area</h2>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelArea"> Cargar Archivo</button>
+                    <input type="file" id="fileInputArea" accept=".xlsx, .xls" style="display: none;" />
+                    <table class="table table-striped table-bordered mt-3" id="tablaArea">
+                        <thead>
+                        <tr>
+                            <th>IdArea</th>
+                            <th>AreaNombre</th>
+                            <th>AreaProduccion</th>
+                            <th>StLocation</th>
+                            <th>StBin</th>
+                        </tr>
+                        </thead>
+                        <tbody id="bodyArea"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="tabla-section" id="sectionUbicaciones">
         <div class=""></div>
         <div class="container">

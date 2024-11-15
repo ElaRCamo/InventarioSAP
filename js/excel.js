@@ -1,4 +1,104 @@
+/**********************************************************************************************************************/
+/********************************************************TABLA AREA***************************************************/
+/**********************************************************************************************************************/
+function cargarDatosArea() {
+    fetch('dao/daoConsultarArea.php')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('bodyArea');
+            tableBody.innerHTML = ''; // Limpiar el contenido anterior
 
+            // Verificar si hay datos en "data"
+            if (data && data.data) {
+                data.data.forEach(area => {
+                    const row = document.createElement('tr');
+
+                    // Crear celdas para cada columna
+                    row.innerHTML = `
+                            <td>${area.IdArea}</td>
+                            <td>${area.AreaNombre}</td>
+                            <td>${area.AreaProduccion}</td>
+                            <td>${area.StLocation}</td>
+                            <td>${area.StBin}</td>
+                        `;
+
+                    // Agregar la fila a la tabla
+                    tableBody.appendChild(row);
+                });
+            } else {
+                // Si no hay datos, mostrar un mensaje en la tabla
+                const row = document.createElement('tr');
+                row.innerHTML = '<td colspan="5" class="text-center">No hay datos disponibles</td>';
+                tableBody.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar los datos:', error);
+        });
+}
+/******************Cargar e insertar datos de Excel*******************/
+document.getElementById('btnExcelArea').addEventListener('click', () => {
+    document.getElementById('fileInputArea').click();
+});
+
+document.getElementById('fileInputArea').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        insertarExcelArea(file);
+    }
+});
+async function insertarExcelArea(file) {
+    try {
+        // Leer el archivo Excel
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        // Mapear los datos, asegurándonos de convertir las fechas correctamente
+        const areaData = jsonData.slice(1).map((row) => {
+            return {
+                IdArea: row[0],
+                AreaNombre: row[1],
+                AreaProduccion: row[2],
+                StLocation: row[3],
+                StBin: row [4]
+            };
+        });
+
+        // Enviar los datos al backend
+        const response = await fetch('dao/daoInsertarArea.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ areaDatos: areaData })
+        });
+
+        // Obtener la respuesta del backend
+        const result = await response.json();
+
+        if (result.status === "success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualización exitosa',
+                text: result.message
+            });
+
+            cargarDatosArea();
+        } else {
+            // Mostrar el mensaje de error que viene del backend
+            throw new Error(result.message );
+        }
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Ocurrió un error al procesar el archivo. Recargue la página e intente nuevamente.'
+        });
+    }
+}
 /**********************************************************************************************************************/
 /********************************************************TABLA UBICAIONES***************************************************/
 /**********************************************************************************************************************/
