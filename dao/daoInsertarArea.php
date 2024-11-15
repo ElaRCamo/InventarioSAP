@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $StBin = isset($registroArea['StBin']) ? trim($registroArea['StBin']) : null;
 
             // Validar que los datos esenciales no sean nulos o vacíos
-            if ( $AreaNombre === null || $AreaProduccion === null || $StLocation === null) {
+            if ( $AreaNombre === null || $AreaProduccion === null) {
                 $errores[] = "Faltan datos para el registro AreaNombre: $AreaNombre, AreaProduccion: $AreaProduccion, StLocation: $StLocation, StBin: $StBin";
                 $todosExitosos = false;
             } else {
