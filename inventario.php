@@ -29,7 +29,7 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Area</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelArea"> Cargar Archivo</button>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelArea"> Cargar Excel Areas</button>
                     <input type="file" id="fileInputArea" accept=".xlsx, .xls" style="display: none;" />
                     <table class="table table-striped table-bordered mt-3" id="tablaArea">
                         <thead>
@@ -54,7 +54,7 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Ubicaciones</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelUbicaciones"> Cargar Archivo</button>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelUbicaciones"> Cargar Excel Ubicaciones</button>
                     <input type="file" id="fileInputUbicaciones" accept=".xlsx, .xls" style="display: none;" />
                     <table class="table table-striped table-bordered mt-3" id="tablaUbicaciones">
                         <thead>
@@ -76,7 +76,7 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Storage</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelStorage"> Cargar Archivo</button>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelStorage"> Cargar Excel Storage</button>
                     <input type="file" id="fileInputStorage" accept=".xlsx, .xls" style="display: none;" />
                     <table class="table table-striped table-bordered mt-3" id="tablaStorage">
                         <thead>
@@ -101,7 +101,7 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Inventario</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelInventario"> Cargar Archivo</button>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelInventario"> Cargar Excel Inventario</button>
                     <input type="file" id="fileInputInventario" accept=".xlsx, .xls" style="display: none;" />
                     <table class="table table-striped table-bordered mt-3" id="tablaInventario">
                         <thead>
@@ -127,7 +127,7 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Bin</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelBin"> Cargar Archivo</button>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelBin"> Cargar Excel Bin</button>
                     <input type="file" id="fileInputBin" accept=".xlsx, .xls" style="display: none;" />
                     <table class="table table-striped table-bordered mt-3" id="tablaBin">
                         <thead>
@@ -149,7 +149,7 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Parte</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelParte"> Cargar Archivo</button>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelParte"> Cargar Excel Parte</button>
                     <input type="file" id="fileInputParte" accept=".xlsx, .xls" style="display: none;" />
                     <table class="table table-striped table-bordered mt-3" id="tablaParte">
                         <thead>
