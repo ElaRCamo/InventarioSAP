@@ -74,7 +74,7 @@ function insertarRegistrosArea($AreaNombre, $AreaProduccion, $StLocation, $StBin
 
         } else {
 
-            if($StBin === "" || $StBin === null){
+            if($StBin === null){
                 $StBin = "";
             }
 
