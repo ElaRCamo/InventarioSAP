@@ -23,6 +23,28 @@
 <body>
 <main>
 
+    <section class="tabla-section" id="sectionUbicaciones">
+        <div class=""></div>
+        <div class="container">
+            <div class="row">
+                <div class="container mt-5">
+                    <h2 class="text-center">Tabla Storage</h2>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelUbicaciones"> Cargar Archivo</button>
+                    <input type="file" id="fileInputUbicaciones" accept=".xlsx, .xls" style="display: none;" />
+                    <table class="table table-striped table-bordered mt-3" id="tablaUbicaciones">
+                        <thead>
+                        <tr>
+                            <th>GrammerNo</th>
+                            <th>PVB</th>
+                        </tr>
+                        </thead>
+                        <tbody id="bodyUbicaciones"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="tabla-section" id="sectionStorage">
         <div class=""></div>
         <div class="container">
