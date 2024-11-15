@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $StBin = isset($registroArea['StBin']) ? trim($registroArea['StBin']) : null;
 
             // Validar que los datos esenciales no sean nulos o vacíos
-            if ($IdArea === null || $AreaNombre === null || $AreaProduccion === null || $StLocation === null || $StBin === null ) {
+            if ($IdArea === null || $AreaNombre === null || $AreaProduccion === null || $StLocation === null) {
                 $errores[] = "Faltan datos para el registro IdArea: $IdArea, AreaNombre: $AreaNombre, AreaProduccion: $AreaProduccion, StLocation: $StLocation, StBin: $StBin";
                 $todosExitosos = false;
             } else {
@@ -74,6 +74,10 @@ function insertarRegistrosArea($IdArea, $AreaNombre, $AreaProduccion, $StLocatio
             $updateParte->close();
 
         } else {
+
+            if($StBin === "" || $StBin === null){
+                $StBin = "N/A";
+            }
             // Si no existe, insertar el nuevo registro
             $insertParte = $conex->prepare("INSERT INTO `Area` (`IdArea`, `AreaNombre`, `AreaProduccion`, `StLocation`, `StBin`) 
                                                        VALUES (?, ?, ?, ?, ?)");
