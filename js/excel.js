@@ -58,11 +58,10 @@ async function insertarExcelArea(file) {
         // Mapear los datos, asegurándonos de convertir las fechas correctamente
         const areaData = jsonData.slice(1).map((row) => {
             return {
-                IdArea: row[0],
-                AreaNombre: row[1],
-                AreaProduccion: row[2],
-                StLocation: row[3],
-                StBin: row [4]
+                AreaNombre: row[0],
+                AreaProduccion: row[1],
+                StLocation: row[2],
+                StBin: row [3]
             };
         });
 
