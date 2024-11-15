@@ -19,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Validar que los datos esenciales no sean nulos o vacíos
             if ($IdArea === null || $AreaNombre === null || $AreaProduccion === null || $StLocation === null || $StBin === null ) {
-                $errores[] = "Faltan datos para el registro IdArea: $IdArea, AreaNombre: $AreaNombre, AreaProduccion: $AreaProduccion, StLocation: $StLocation, Costo: $StBin";
+                $errores[] = "Faltan datos para el registro IdArea: $IdArea, AreaNombre: $AreaNombre, AreaProduccion: $AreaProduccion, StLocation: $StLocation, StBin: $StBin";
                 $todosExitosos = false;
             } else {
                 // Llamar a la función de inserción
@@ -31,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
             }
         }
-
         // Respuesta final si todos fueron exitosos
         if ($todosExitosos) {
             $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Parte fueron actualizados correctamente.");
@@ -47,12 +46,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 echo json_encode($respuesta);
 
-
 function insertarRegistrosArea($IdArea, $AreaNombre, $AreaProduccion, $StLocation, $StBin){
     $con = new LocalConector();
     $conex = $con->conectar();
-
-    // Iniciar transacción
     $conex->begin_transaction();
 
     try {
@@ -75,7 +71,6 @@ function insertarRegistrosArea($IdArea, $AreaNombre, $AreaProduccion, $StLocatio
                 $conex->commit();
                 $respuesta = array('status' => 'success', 'message' => 'Registro actualizado correctamente.');
             }
-
             $updateParte->close();
 
         } else {
@@ -93,10 +88,8 @@ function insertarRegistrosArea($IdArea, $AreaNombre, $AreaProduccion, $StLocatio
                 $conex->commit();
                 $respuesta = array('status' => 'success', 'message' => 'Registro insertado correctamente.');
             }
-
             $insertParte->close();
         }
-
         $consultaExistente->close();
 
     } catch (Exception $e) {
