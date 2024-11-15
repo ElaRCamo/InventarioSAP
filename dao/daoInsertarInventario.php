@@ -56,6 +56,14 @@ function insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $
     // Iniciar transacción
     $conex->begin_transaction();
 
+    if($StBin === null){
+        $StBin = "";
+    }
+
+    if($StType === null){
+        $StType = "";
+    }
+
     try {
         // Consultar si el registro ya existe
         $consultaExistente = $conex->prepare("SELECT * FROM `InventarioSap` WHERE `GrammerNo` = ? AND StBin = ? AND StType = ? AND STLocation = ?");
@@ -80,14 +88,6 @@ function insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $
             $updateInventario->close();
 
         } else {
-
-            if($StBin === null){
-                $StBin = "";
-            }
-
-            if($StType === null){
-                $StType = "";
-            }
 
             // Si no existe, insertar el nuevo registro
             $insertParte = $conex->prepare("INSERT INTO  `InventarioSap` (`STLocation`, `STBin`, `STType`, `GrammerNo`, `Cantidad`, `AreaCve`)

@@ -50,6 +50,14 @@ function insertarRegistrosArea($AreaNombre, $AreaProduccion, $StLocation, $StBin
     $conex = $con->conectar();
     $conex->begin_transaction();
 
+    if($StBin === null){
+        $StBin = "";
+    }
+
+    if($StLocation === null){
+        $StLocation = "";
+    }
+
     try {
         // Consultar si el registro ya existe
         $consultaExistente = $conex->prepare("SELECT * FROM `Area` WHERE `AreaNombre` = ?");
@@ -73,14 +81,6 @@ function insertarRegistrosArea($AreaNombre, $AreaProduccion, $StLocation, $StBin
             $updateParte->close();
 
         } else {
-
-            if($StBin === null){
-                $StBin = "";
-            }
-
-            if($StLocation === null){
-                $StLocation = "";
-            }
 
             // Si no existe, insertar el nuevo registro
             $insertParte = $conex->prepare("INSERT INTO `Area` ( `AreaNombre`, `AreaProduccion`, `StLocation`, `StBin`) 
