@@ -80,6 +80,15 @@ function insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $
             $updateInventario->close();
 
         } else {
+
+            if($StBin === null){
+                $StBin = "";
+            }
+
+            if($StType === null){
+                $StType = "";
+            }
+
             // Si no existe, insertar el nuevo registro
             $insertParte = $conex->prepare("INSERT INTO  `InventarioSap` (`STLocation`, `STBin`, `STType`, `GrammerNo`, `Cantidad`, `AreaCve`)
                                             VALUES (?, ?, ?, ?, ?, ?)");
