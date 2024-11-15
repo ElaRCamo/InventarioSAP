@@ -9,10 +9,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $todosExitosos = true;
         $errores = [];
 
-        foreach ($inputData['ubicacionesDatos'] as $registroInventario) {
+        foreach ($inputData['ubicacionesDatos'] as $registroUbicaciones) {
             // Validar y asignar valores
-            $GrammerNo = isset($registroInventario['GrammerNo']) ? trim($registroInventario['GrammerNo']) : null;
-            $PVB = isset($registroInventario['PVB']) ? trim($registroInventario['PVB']) : null;
+            $GrammerNo = isset($registroUbicaciones['GrammerNo']) ? trim($registroUbicaciones['GrammerNo']) : null;
+            $PVB = isset($registroUbicaciones['PVB']) ? trim($registroUbicaciones['PVB']) : null;
 
             // Validar que los datos esenciales no sean nulos o vacíos
             if ($GrammerNo === null || $PVB === null  ) {
@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Respuesta final si todos fueron exitosos
         if ($todosExitosos) {
-            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Parte fueron actualizados correctamente.");
+            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Ubicaciones fueron actualizados correctamente.");
         } else {
             $respuesta = array("status" => 'error', "message" => "Se encontraron errores al insertar los registros.", "detalles" => $errores);
         }
@@ -55,7 +55,7 @@ function insertarRegistrosUbicaciones($GrammerNo, $PVB) {
     try {
         // Consultar si el registro ya existe
         $consultaExistente = $conex->prepare("SELECT * FROM `Ubicaciones` WHERE `GrammerNo` = ? ");
-        $consultaExistente->bind_param("ss", $GrammerNo,$PVB);
+        $consultaExistente->bind_param("s", $GrammerNo);
         $consultaExistente->execute();
         $consultaExistente->store_result();
 
