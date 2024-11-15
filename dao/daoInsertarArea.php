@@ -77,6 +77,11 @@ function insertarRegistrosArea($AreaNombre, $AreaProduccion, $StLocation, $StBin
             if($StBin === "" || $StBin === null){
                 $StBin = "N/A";
             }
+
+            if($StLocation === "" || $StLocation === null){
+                $StBin = "";
+            }
+
             // Si no existe, insertar el nuevo registro
             $insertParte = $conex->prepare("INSERT INTO `Area` ( `AreaNombre`, `AreaProduccion`, `StLocation`, `StBin`) 
                                                        VALUES ( ?, ?, ?, ?)");
