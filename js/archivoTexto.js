@@ -4,18 +4,23 @@ document.getElementById('btnTxtBitacora').addEventListener('click', () => {
 });
 
 document.getElementById('fileInputTxt').addEventListener('change', async (event) => {
-    const file = event.target.files[0];
+    const file = event.target.files[0]; // El archivo seleccionado
     if (file) {
-        // Paso 1: Procesar el archivo y enviar los datos al backend
+        // Asegúrate de que 'file' es un objeto File
+        console.log(file); // Verifica que sea un archivo válido
+
+        // Procesar el archivo y enviar los datos al backend
         const dataToBackend = await manejarArchivo(file); // Tu función para procesar el archivo
         const dataFromBackend = await enviarDatosAlBackend(dataToBackend); // Datos actualizados del backend
 
-        // Paso 2: Actualizar el contenido del archivo y descargarlo
+        // Actualizar y descargar el archivo con el contenido actualizado
         if (dataFromBackend.length > 0) {
             await actualizarContenidoArchivo(file, dataFromBackend); // Actualizar y descargar el archivo
         } else {
             console.error("No se recibieron datos válidos del backend.");
         }
+    } else {
+        console.error("No se seleccionó ningún archivo.");
     }
 });
 
@@ -62,6 +67,7 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
     const reader = new FileReader();
 
     reader.onload = function (event) {
+        // Verifica que el contenido del archivo se esté leyendo correctamente
         const lines = event.target.result.split("\n"); // Dividimos el contenido por líneas
         const updatedLines = lines.map((line) => {
             // Extraemos storBin y materialNo desde el formato de la línea
@@ -100,8 +106,10 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
         document.body.removeChild(link);
     };
 
-    reader.readAsText(file); // Leemos el archivo de texto
+    // Leemos el archivo (asegúrate de que 'file' sea un objeto File válido)
+    reader.readAsText(file);
 }
+
 
 
 
