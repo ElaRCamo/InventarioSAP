@@ -15,7 +15,7 @@ document.getElementById('fileInputTxt').addEventListener('change', async (event)
 
         // Actualizar y descargar el archivo con el contenido actualizado
         if (dataFromBackend.length > 0) {
-            await actualizarContenidoArchivo(file, dataFromBackend); // Actualizar y descargar el archivo
+            actualizarContenidoArchivo(file, dataFromBackend); // Actualizar y descargar el archivo
         } else {
             console.error("No se recibieron datos válidos del backend.");
         }
@@ -63,29 +63,33 @@ async function manejarArchivo(file) {
 
     reader.readAsText(file);
 }
+
 async function actualizarContenidoArchivo(file, dataFromBackend) {
     const reader = new FileReader();
 
     reader.onload = function (event) {
         // Verifica que el contenido del archivo se esté leyendo correctamente
-        const lines = event.target.result.split("\n"); // Dividimos el contenido por líneas
+        const content = event.target.result;
+        const lines = content.split(/\r?\n/);  // Dividir por saltos de línea con compatibilidad entre diferentes entornos
         const updatedLines = lines.map((line) => {
-            // Extraemos storBin y materialNo desde el formato de la línea
+            // Verifica si la línea tiene un formato válido y extrae storBin y materialNo
             const storBin = line.slice(0, 20).trim(); // Ajusta el índice según tu formato
             const materialNo = line.slice(30, 40).trim(); // Ajusta el índice según tu formato
 
-            // Buscamos si hay coincidencia con el dato del backend
+            // Buscar el dato correspondiente en el array de respuesta del backend
             const matchedRecord = dataFromBackend.find(
                 (record) => record.storBin.trim() === storBin && record.materialNo.trim() === materialNo
             );
 
+            // Si encontramos un registro correspondiente, actualizamos la línea
             if (matchedRecord) {
-                const primerConteo = matchedRecord.PrimerConteo.padEnd(15, " "); // Ajustamos el largo del PrimerConteo
-                // Reemplazamos el segmento correspondiente en la línea
-                return line.slice(0, 70) + primerConteo + line.slice(85); // Ajusta el índice según el formato
+                const primerConteo = matchedRecord.PrimerConteo.padEnd(15, " "); // Ajustar el largo del PrimerConteo
+                // Aquí es donde ajustas el índice según tu formato específico
+                return line.slice(0, 70) + primerConteo + line.slice(85); // Reemplaza el segmento correspondiente en la línea
             }
 
-            return line; // Si no hay coincidencia, mantenemos la línea sin cambios
+            // Si no hay coincidencia, mantenemos la línea sin cambios
+            return line;
         });
 
         // Generamos el contenido actualizado
@@ -94,23 +98,26 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
         // Creamos el Blob con el contenido actualizado
         const blob = new Blob([updatedContent], { type: "text/plain" });
 
-        // Creamos el enlace para la descarga
+        // Creamos el enlace para la descarga del archivo
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
         link.download = "archivo_actualizado.txt"; // Nombre del archivo que se descargará
 
         // Simulamos el clic en el enlace para iniciar la descarga
+        document.body.appendChild(link); // Añadir el enlace al DOM antes de hacer clic
         link.click();
 
-        // Limpiamos el enlace temporal
+        // Limpiamos el enlace temporal después de la descarga
         document.body.removeChild(link);
+    };
+
+    reader.onerror = function (error) {
+        console.error("Error al leer el archivo:", error);
     };
 
     // Leemos el archivo (asegúrate de que 'file' sea un objeto File válido)
     reader.readAsText(file);
 }
-
-
 
 
 async function enviarDatosAlBackend(data) {
