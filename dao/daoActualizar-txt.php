@@ -41,3 +41,4 @@ mysqli_close($conexion);
 
 // Enviar resultados al frontend
 echo json_encode($updatedData);
+?>
