@@ -3,12 +3,27 @@ document.getElementById('btnTxtBitacora').addEventListener('click', () => {
     document.getElementById('fileInputTxt').click();
 });
 
-document.getElementById('fileInputTxt').addEventListener('change', (event) => {
+document.getElementById('fileInputTxt').addEventListener('change', async (event) => {
     const file = event.target.files[0];
-    if (file) {
-        manejarArchivo(file);
+
+    if (!file) {
+        console.error("No se seleccionó ningún archivo.");
+        return;
+    }
+
+    // Validar el tipo de archivo (opcional, si es necesario)
+    if (file.type !== "text/plain") {
+        console.error("Por favor, selecciona un archivo de texto válido.");
+        return;
+    }
+
+    try {
+        await manejarArchivo(file);
+    } catch (error) {
+        console.error("Error al procesar el archivo:", error);
     }
 });
+
 
 async function manejarArchivo(archivo) {
     const datos = await procesarArchivoTXT(archivo); // Leer archivo
