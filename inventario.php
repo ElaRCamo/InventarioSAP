@@ -31,6 +31,10 @@
                     <h2 class="text-center">Tabla Bitacora</h2>
                     <button class="btn btn-secondary text-right btnExcel" id="btnExcelBitacora"> Cargar Excel Bitacora</button>
                     <input type="file" id="fileInputBitacora" accept=".xlsx, .xls" style="display: none;" />
+
+                    <button class="btn btn-secondary text-right btnExcel" id="btnTxtBitacora"> Cargar txt </button>
+                    <input type="file" id="fileInputTxt" accept=".txt" style="display: none;" />
+
                     <table class="table table-striped table-bordered mt-3" id="tablaBitacora">
                         <thead>
                         <tr>
