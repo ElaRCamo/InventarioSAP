@@ -5,30 +5,24 @@ document.getElementById('btnTxtBitacora').addEventListener('click', () => {
 
 document.getElementById('fileInputTxt').addEventListener('change', async (event) => {
     const file = event.target.files[0]; // El archivo seleccionado
+    console.log("Archivo seleccionado:", file);  // Agrega esto para verificar el archivo
+
     if (file) {
-        // Asegúrate de que 'file' es un objeto File
-        console.log(file); // Verifica que sea un archivo válido
+        // Procesar el archivo y enviar los datos al backend
+        const dataToBackend = await manejarArchivo(file);
+        const dataFromBackend = await enviarDatosAlBackend(dataToBackend);
 
-        try {
-            // Procesar el archivo y obtener los datos procesados
-            const dataToBackend = await manejarArchivo(file);  // Esta vez, manejarArchivo retorna los datos procesados
-
-            // Enviar los datos al backend
-            const dataFromBackend = await enviarDatosAlBackend(dataToBackend);
-
-            // Actualizar y descargar el archivo con el contenido actualizado
-            if (dataFromBackend.length > 0) {
-                actualizarContenidoArchivo(file, dataFromBackend); // Actualizar y descargar el archivo
-            } else {
-                console.error("No se recibieron datos válidos del backend.");
-            }
-        } catch (error) {
-            console.error("Error procesando el archivo:", error);
+        if (dataFromBackend.length > 0) {
+            // Solo actualiza si dataFromBackend tiene datos
+            actualizarContenidoArchivo(file, dataFromBackend);
+        } else {
+            console.error("No se recibieron datos válidos del backend.");
         }
     } else {
         console.error("No se seleccionó ningún archivo.");
     }
 });
+
 
 
 
@@ -102,11 +96,10 @@ async function manejarArchivo(file) {
         reader.readAsText(file);
     });
 }
-
 async function actualizarContenidoArchivo(file, dataFromBackend) {
-    // Verifica que el archivo sea un objeto válido de tipo Blob
+    // Verifica si 'file' es un Blob válido
     if (!(file instanceof Blob)) {
-        console.error("El archivo no es válido", file);
+        console.error("El archivo no es válido:", file);
         return;
     }
 
@@ -116,22 +109,8 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
         // Verifica que el contenido del archivo se esté leyendo correctamente
         const lines = event.target.result.split("\n"); // Dividimos el contenido por líneas
         const updatedLines = lines.map((line) => {
-            // Extraemos storBin y materialNo desde el formato de la línea
-            const storBin = line.slice(0, 20).trim(); // Ajusta el índice según tu formato
-            const materialNo = line.slice(30, 40).trim(); // Ajusta el índice según tu formato
-
-            // Buscamos si hay coincidencia con el dato del backend
-            const matchedRecord = dataFromBackend.find(
-                (record) => record.storBin.trim() === storBin && record.materialNo.trim() === materialNo
-            );
-
-            if (matchedRecord) {
-                const primerConteo = matchedRecord.PrimerConteo.padEnd(15, " "); // Ajustamos el largo del PrimerConteo
-                // Reemplazamos el segmento correspondiente en la línea
-                return line.slice(0, 70) + primerConteo + line.slice(85); // Ajusta el índice según el formato
-            }
-
-            return line; // Si no hay coincidencia, mantenemos la línea sin cambios
+            // Lógica para actualizar las líneas
+            // ...
         });
 
         // Generamos el contenido actualizado
@@ -147,8 +126,6 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
 
         // Simulamos el clic en el enlace para iniciar la descarga
         link.click();
-
-        // Limpiamos el enlace temporal
         document.body.removeChild(link);
     };
 
