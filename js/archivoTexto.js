@@ -6,20 +6,19 @@ document.getElementById('btnTxtBitacora').addEventListener('click', () => {
 document.getElementById('fileInputTxt').addEventListener('change', async (event) => {
     const file = event.target.files[0];
     if (file) {
-        // Paso 1: Procesar el archivo
-        const dataToBackend = await manejarArchivo(file);
+        // Paso 1: Procesar el archivo y enviar los datos al backend
+        const dataToBackend = await manejarArchivo(file); // Tu función para procesar el archivo
+        const dataFromBackend = await enviarDatosAlBackend(dataToBackend); // Datos actualizados del backend
 
-        // Paso 2: Enviar datos al backend
-        const dataFromBackend = await enviarDatosAlBackend(dataToBackend);
-
-        // Paso 3: Actualizar el archivo TXT
+        // Paso 2: Actualizar el contenido del archivo y descargarlo
         if (dataFromBackend.length > 0) {
-            await actualizarContenidoArchivo(file, dataFromBackend);
+            await actualizarContenidoArchivo(file, dataFromBackend); // Actualizar y descargar el archivo
         } else {
             console.error("No se recibieron datos válidos del backend.");
         }
     }
 });
+
 
 
 async function manejarArchivo(file) {
@@ -50,7 +49,7 @@ async function manejarArchivo(file) {
         console.log("Datos procesados y devueltos del backend:", resultado);
 
         // Actualizar el archivo directamente en el frontend
-        actualizarContenidoArchivo(contenido, resultado);
+        await actualizarContenidoArchivo(contenido, resultado);
     };
 
     reader.onerror = (error) => {
@@ -63,44 +62,47 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
     const reader = new FileReader();
 
     reader.onload = function (event) {
-        const lines = event.target.result.split("\n");
+        const lines = event.target.result.split("\n"); // Dividimos el contenido por líneas
         const updatedLines = lines.map((line) => {
-            // Buscar coincidencias con storBin y materialNo
-            const storBin = line.slice(0, 20).trim(); // Ajusta los índices según el formato
-            const materialNo = line.slice(30, 40).trim(); // Ajusta los índices según el formato
+            // Extraemos storBin y materialNo desde el formato de la línea
+            const storBin = line.slice(0, 20).trim(); // Ajusta el índice según tu formato
+            const materialNo = line.slice(30, 40).trim(); // Ajusta el índice según tu formato
 
+            // Buscamos si hay coincidencia con el dato del backend
             const matchedRecord = dataFromBackend.find(
                 (record) => record.storBin.trim() === storBin && record.materialNo.trim() === materialNo
             );
 
             if (matchedRecord) {
-                // Reemplazar el segmento correspondiente con PrimerConteo
-                const primerConteo = matchedRecord.PrimerConteo.padEnd(15, " "); // Ajusta el formato
-                return (
-                    line.slice(0, 70) + // Parte inicial de la línea
-                    primerConteo + // PrimerConteo actualizado
-                    line.slice(85) // Parte final de la línea
-                );
+                const primerConteo = matchedRecord.PrimerConteo.padEnd(15, " "); // Ajustamos el largo del PrimerConteo
+                // Reemplazamos el segmento correspondiente en la línea
+                return line.slice(0, 70) + primerConteo + line.slice(85); // Ajusta el índice según el formato
             }
 
-            return line; // Devolver la línea sin cambios si no hay coincidencia
+            return line; // Si no hay coincidencia, mantenemos la línea sin cambios
         });
 
-        // Generar el contenido actualizado
+        // Generamos el contenido actualizado
         const updatedContent = updatedLines.join("\n");
 
-        // Crear y descargar el archivo actualizado
+        // Creamos el Blob con el contenido actualizado
         const blob = new Blob([updatedContent], { type: "text/plain" });
+
+        // Creamos el enlace para la descarga
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = "archivo_actualizado.txt";
-        document.body.appendChild(link);
+        link.download = "archivo_actualizado.txt"; // Nombre del archivo que se descargará
+
+        // Simulamos el clic en el enlace para iniciar la descarga
         link.click();
+
+        // Limpiamos el enlace temporal
         document.body.removeChild(link);
     };
 
-    reader.readAsText(file);
+    reader.readAsText(file); // Leemos el archivo de texto
 }
+
 
 
 async function enviarDatosAlBackend(data) {
