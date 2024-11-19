@@ -1,6 +1,9 @@
 <?php
 include_once('connection.php');
 
+// Configurar el encabezado para una respuesta JSON
+header('Content-Type: application/json');
+
 // Leer los datos enviados desde el frontend
 $data = json_decode(file_get_contents('php://input'), true);
 
@@ -12,26 +15,42 @@ if (empty($data)) {
 $con = new LocalConector();
 $conexion = $con->conectar();
 
+if (!$conexion) {
+    echo json_encode(['error' => 'Error de conexión a la base de datos']);
+    exit();
+}
+
 $updatedData = [];
 
 foreach ($data as $record) {
     $stor_bin = mysqli_real_escape_string($conexion, $record['storBin']);
     $materialParte = mysqli_real_escape_string($conexion, $record['materialNo']);
 
-    $consP = "SELECT PrimerConteo FROM Bitacora_Inventario WHERE SorageBin = '$stor_bin' AND NumeroParte = '$materialParte'";
+    // Verificar posibles errores de tipografía en el nombre de las columnas
+    $consP = "SELECT PrimerConteo FROM Bitacora_Inventario WHERE StorageBin = '$stor_bin' AND NumeroParte = '$materialParte'";
     $rsconsPro = mysqli_query($conexion, $consP);
 
-    if ($rsconsPro && $row = mysqli_fetch_assoc($rsconsPro)) {
-        $updatedData[] = [
-            'storBin' => $stor_bin,
-            'materialNo' => $materialParte,
-            'PrimerConteo' => $row['PrimerConteo']
-        ];
+    if ($rsconsPro) {
+        if ($row = mysqli_fetch_assoc($rsconsPro)) {
+            $updatedData[] = [
+                'storBin' => $stor_bin,
+                'materialNo' => $materialParte,
+                'PrimerConteo' => $row['PrimerConteo']
+            ];
+        } else {
+            // Si no hay resultados, asignar valores predeterminados
+            $updatedData[] = [
+                'storBin' => $stor_bin,
+                'materialNo' => $materialParte,
+                'PrimerConteo' => '0'
+            ];
+        }
     } else {
+        // Si ocurre un error en la consulta, registrar el error
         $updatedData[] = [
             'storBin' => $stor_bin,
             'materialNo' => $materialParte,
-            'PrimerConteo' => '0'
+            'error' => mysqli_error($conexion)
         ];
     }
 }
