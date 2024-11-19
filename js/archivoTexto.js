@@ -96,6 +96,8 @@ async function manejarArchivo(file) {
         reader.readAsText(file);
     });
 }
+
+/*
 async function actualizarContenidoArchivo(file, dataFromBackend) {
     // Verifica si 'file' es un Blob válido
     if (!(file instanceof Blob)) {
@@ -133,6 +135,44 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
     reader.readAsText(file);
 }
 
+*/
+
+async function actualizarContenidoArchivo(file, dataFromBackend) {
+    if (!(file instanceof Blob)) {
+        console.error("El archivo no es válido:", file);
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+        // El contenido del archivo original
+        const originalContent = event.target.result;
+
+        // Convertir los datos del backend en un formato que se pueda incluir en el archivo
+        const updatedContent = dataFromBackend.map(item => {
+            return `${item.storBin}, ${item.materialNo}, ${item.PrimerConteo}`;
+        }).join("\n");
+
+        // Si deseas añadir los datos del backend al final del contenido original:
+        const finalContent = originalContent + "\n" + updatedContent;
+
+        // Creamos el Blob con el contenido actualizado
+        const blob = new Blob([finalContent], { type: "text/plain" });
+
+        // Creamos el enlace para la descarga
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "archivo_actualizado.txt"; // Nombre del archivo que se descargará
+
+        // Simulamos el clic en el enlace para iniciar la descarga
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    // Leemos el archivo original
+    reader.readAsText(file);
+}
 
 async function enviarDatosAlBackend(data) {
     try {
