@@ -105,7 +105,7 @@ function actualizarContenidoArchivo(contenidoOriginal, datosActualizados) {
 
 async function enviarDatosAlBackend(data) {
     try {
-        const response = await fetch('../dao/daoActualizar-txt.php', {
+        const response = await fetch('https://grammermx.com/excelInventario/dao/daoActualizar-txt.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
