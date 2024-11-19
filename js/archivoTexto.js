@@ -5,22 +5,19 @@ document.getElementById('btnTxtBitacora').addEventListener('click', () => {
 
 document.getElementById('fileInputTxt').addEventListener('change', async (event) => {
     const file = event.target.files[0];
+    if (file) {
+        // Paso 1: Procesar el archivo
+        const dataToBackend = await manejarArchivo(file);
 
-    if (!file) {
-        console.error("No se seleccionó ningún archivo.");
-        return;
-    }
+        // Paso 2: Enviar datos al backend
+        const dataFromBackend = await enviarDatosAlBackend(dataToBackend);
 
-    // Validar el tipo de archivo (opcional, si es necesario)
-    if (file.type !== "text/plain") {
-        console.error("Por favor, selecciona un archivo de texto válido.");
-        return;
-    }
-
-    try {
-        await manejarArchivo(file);
-    } catch (error) {
-        console.error("Error al procesar el archivo:", error);
+        // Paso 3: Actualizar el archivo TXT
+        if (dataFromBackend.length > 0) {
+            await actualizarContenidoArchivo(file, dataFromBackend);
+        } else {
+            console.error("No se recibieron datos válidos del backend.");
+        }
     }
 });
 
@@ -62,45 +59,48 @@ async function manejarArchivo(file) {
 
     reader.readAsText(file);
 }
+async function actualizarContenidoArchivo(file, dataFromBackend) {
+    const reader = new FileReader();
 
-function actualizarContenidoArchivo(contenidoOriginal, datosActualizados) {
-    // Separar el contenido original en líneas
-    const lineas = contenidoOriginal.split(/\r?\n/);
+    reader.onload = function (event) {
+        const lines = event.target.result.split("\n");
+        const updatedLines = lines.map((line) => {
+            // Buscar coincidencias con storBin y materialNo
+            const storBin = line.slice(0, 20).trim(); // Ajusta los índices según el formato
+            const materialNo = line.slice(30, 40).trim(); // Ajusta los índices según el formato
 
-    // Crear un mapa para acceder rápidamente a los datos actualizados por `storBin`
-    const mapaActualizaciones = new Map(
-        datosActualizados.map((item) => [item.storBin.trim(), item.qtyUoM]) // Asocia `storBin` con `qtyUoM`
-    );
+            const matchedRecord = dataFromBackend.find(
+                (record) => record.storBin.trim() === storBin && record.materialNo.trim() === materialNo
+            );
 
-    // Actualizar las líneas del archivo
-    const contenidoModificado = lineas.map((linea) => {
-        const storBinRegex = /^(?<storBin>[^\s]+)\s+/; // Ajustar el regex según el formato exacto del archivo
-        const match = linea.match(storBinRegex);
-
-        if (match) {
-            const storBin = match.groups.storBin.trim();
-
-            // Si existe una actualización para este `storBin`, se modifica la línea
-            if (mapaActualizaciones.has(storBin)) {
-                const qtyUoM = mapaActualizaciones.get(storBin);
-
-                // Actualizar la línea con el nuevo valor de Qty........... UoM
-                return linea.replace(/Qty\.+\s+\w+/, `Qty........... ${qtyUoM}`);
+            if (matchedRecord) {
+                // Reemplazar el segmento correspondiente con PrimerConteo
+                const primerConteo = matchedRecord.PrimerConteo.padEnd(15, " "); // Ajusta el formato
+                return (
+                    line.slice(0, 70) + // Parte inicial de la línea
+                    primerConteo + // PrimerConteo actualizado
+                    line.slice(85) // Parte final de la línea
+                );
             }
-        }
 
-        // Si no coincide, devolver la línea sin cambios
-        return linea;
-    });
+            return line; // Devolver la línea sin cambios si no hay coincidencia
+        });
 
-    // Combinar las líneas nuevamente en un solo string
-    const contenidoFinal = contenidoModificado.join("\r\n");
+        // Generar el contenido actualizado
+        const updatedContent = updatedLines.join("\n");
 
-    // Descargar el archivo modificado
-    descargarArchivo(contenidoFinal, "archivo_actualizado.txt");
+        // Crear y descargar el archivo actualizado
+        const blob = new Blob([updatedContent], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "archivo_actualizado.txt";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    reader.readAsText(file);
 }
-
-
 
 
 async function enviarDatosAlBackend(data) {
