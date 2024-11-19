@@ -6,9 +6,66 @@ document.getElementById('btnTxtBitacora').addEventListener('click', () => {
 document.getElementById('fileInputTxt').addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (file) {
-        actualizarTxtBitacora(file);
+        manejarArchivo(file);
     }
 });
+
+async function manejarArchivo(archivo) {
+    const datos = await procesarArchivoTXT(archivo); // Leer archivo
+    const datosActualizados = await actualizarDatosTXT(datos); // Actualizar datos
+    generarArchivoTXT(datosActualizados); // Generar el archivo actualizado
+}
+
+
+async function procesarArchivoTXT(archivo) {
+    const texto = await archivo.text(); // Leer el contenido del archivo como texto
+    const lineas = texto.split("\n"); // Dividir el contenido en líneas
+
+    // Convertir cada línea en un objeto (parsing básico del TXT)
+    const datos = lineas.map(linea => {
+        const [storBin, materialNo, qtyUoM] = linea.split("\t"); // Usa el delimitador correcto
+        return { storBin, materialNo, qtyUoM };
+    });
+
+    return datos; // Retornar como array de objetos
+}
+async function actualizarDatosTXT(datos) {
+    const datosBackend = datos.map(({ storBin, materialNo }) => ({ storBin, materialNo }));
+
+    // Llamar a la función para enviar los datos al backend
+    const resultados = await enviarDatosAlBackend(datosBackend);
+
+    // Mapear los resultados para actualizar la columna
+    const datosActualizados = datos.map(dato => {
+        const resultado = resultados.find(
+            res => res.storBin === dato.storBin && res.materialNo === dato.materialNo
+        );
+
+        return {
+            ...dato,
+            qtyUoM: resultado ? resultado.PrimerConteo : dato.qtyUoM, // Actualiza solo si hay resultado
+        };
+    });
+
+    return datosActualizados;
+}
+
+function generarArchivoTXT(datosActualizados) {
+    const lineasActualizadas = datosActualizados.map(
+        ({ storBin, materialNo, qtyUoM }) => `${storBin}\t${materialNo}\t${qtyUoM}`
+    );
+
+    const contenidoActualizado = lineasActualizadas.join("\n");
+
+    // Crear un archivo descargable
+    const blob = new Blob([contenidoActualizado], { type: "text/plain" });
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = "archivo_actualizado.txt";
+    enlace.click();
+}
+
+
 
 function actualizarTxtBitacora(file) {
     const reader = new FileReader();
