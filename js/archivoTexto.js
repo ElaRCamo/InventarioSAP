@@ -85,6 +85,9 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
                     return line.replace("______________", matchingData.PrimerConteo);
                 }
 
+                console.log("storage:",  item.storBin("\n"));
+                console.log("storage:",  item.materialNo("\n"));
+                console.log("PrimerConteo:",  matchingData.PrimerConteo("\n"));
                 console.log("Líneas actualizadas:", updatedLines.join("\n"));
                 console.log("Datos del backend:", JSON.stringify(dataFromBackend, null, 2));
 
