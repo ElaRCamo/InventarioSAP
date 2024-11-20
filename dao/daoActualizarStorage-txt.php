@@ -21,7 +21,7 @@ if (!$conexion) {
 $updatedData = [];
 
 foreach ($data as $record) {
-    $storageUnit = mysqli_real_escape_string($conexion, $record['storageUnit']);
+    $storageUnit = mysqli_real_escape_string($conexion, $record['storUnit']);
 
     $consP = "SELECT Cantidad
                 FROM Storage_Unit
