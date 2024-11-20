@@ -58,31 +58,37 @@ async function manejarArchivo(file) {
         reader.readAsText(file);
     });
 }
+
 async function actualizarContenidoArchivo(file, dataFromBackend) {
     const reader = new FileReader();
 
     reader.onload = function (event) {
         const originalContent = event.target.result;
-        const originalLines = originalContent.split(/\r?\n/);
+        const originalLines = originalContent.split(/\r?\n/); // Divide el archivo en líneas
 
         const updatedLines = originalLines.map((line) => {
-            if (line.includes("______________")) {
-                // Extraer el `Material no.` para buscar coincidencias
-                const materialNoMatch = line.match(/\b\d{6,}\b/); // Busca un número largo (6 o más dígitos)
-                if (materialNoMatch) {
-                    const materialNo = materialNoMatch[0];
-                    const matchingData = dataFromBackend.find(item => item.materialNo === materialNo);
+            // Extraer storBin y materialNo de la línea
+            const storBinMatch = line.match(/\b\w+\b/); // Busca la primera palabra (storBin)
+            const materialNoMatch = line.match(/\b\d{6,}\b/); // Busca el materialNo (número largo)
 
-                    if (matchingData) {
-                        // Reemplaza `______________` con `PrimerConteo`
-                        return line.replace("______________", matchingData.PrimerConteo);
-                    }
+            if (storBinMatch && materialNoMatch) {
+                const storBin = storBinMatch[0];
+                const materialNo = materialNoMatch[0];
+
+                // Buscar coincidencia en dataFromBackend
+                const matchingData = dataFromBackend.find(
+                    (item) => item.storBin === storBin && item.materialNo === materialNo
+                );
+
+                if (matchingData) {
+                    // Reemplazar ______________ con el valor de PrimerConteo
+                    return line.replace("______________", matchingData.PrimerConteo);
                 }
             }
-            return line; // Mantener líneas no modificadas
+            return line; // Mantener la línea sin cambios si no hay coincidencia
         });
 
-        const finalContent = updatedLines.join("\n");
+        const finalContent = updatedLines.join("\n"); // Unir las líneas actualizadas
         const blob = new Blob([finalContent], { type: "text/plain" });
 
         const link = document.createElement("a");
