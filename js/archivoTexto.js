@@ -69,16 +69,14 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
         console.log(originalContent); // Verifica que se carga el archivo correctamente
 
         const updatedLines = originalLines.map((line) => {
-            // Extraer storBin y materialNo de la línea
-            const storBinMatch = line.match(/\b\w+\b/); // Busca la primera palabra (storBin)
-            const materialNoMatch = line.match(/\b\d{6,}\b/); // Busca el materialNo (número largo)
+            // Divide la línea en partes basándose en espacios/tabulaciones
+            const parts = line.trim().split(/\s+/);
 
-            console.log("Procesando línea:", line);
+            if (parts.length >= 6) {
+                const storBin = parts[1]; // `storBin` es el segundo elemento
+                const materialNo = parts[5]; // `materialNo` es el sexto elemento
 
-            if (storBinMatch && materialNoMatch) {
-                const storBin = storBinMatch[0];
-                const materialNo = materialNoMatch[0];
-
+                console.log(`Procesando línea: ${line}`);
                 console.log(`Extracted storBin: ${storBin}, materialNo: ${materialNo}`);
 
                 // Buscar coincidencia en dataFromBackend
@@ -94,7 +92,7 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
                     console.log(`No se encontró coincidencia para storBin: ${storBin}, materialNo: ${materialNo}`);
                 }
             } else {
-                console.log("No se pudo extraer storBin o materialNo de la línea.");
+                console.log("Formato de línea inesperado:", line);
             }
 
             return line; // Mantener la línea sin cambios si no hay coincidencia
@@ -117,6 +115,7 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
 
     reader.readAsText(file);
 }
+
 
 async function enviarDatosAlBackend(data) {
     try {
