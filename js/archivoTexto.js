@@ -252,7 +252,7 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
                     console.log(`Coincidencia encontrada para storageUnit: ${storageUnit}`);
                     console.log(`Reemplazando ______________ con: ${matchingData.cantidad}`);
                     // Reemplazar el valor en la columna "Qty & UoM"
-                    return line.replace(/______________/, matchingData.cantidad);
+                    return line.replace(/____________/, matchingData.cantidad);
                 }else {
                     console.log(`No se encontró coincidencia para storageUnit: ${storageUnit}`);
                 }
