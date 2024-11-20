@@ -27,7 +27,20 @@ foreach ($data as $record) {
     $materialParte = mysqli_real_escape_string($conexion, $record['materialNo']);
 
     // Verificar posibles errores de tipografía en el nombre de las columnas
-    $consP = "SELECT PrimerConteo FROM Bitacora_Inventario WHERE StorageBin = '$stor_bin' AND NumeroParte = '$materialParte'";
+    $consP = "SELECT 
+                    CASE
+                        WHEN (SegundoConteo IS NULL OR SegundoConteo = 0) 
+                             AND (TercerConteo IS NULL OR TercerConteo = 0) 
+                        THEN PrimerConteo
+                        WHEN (TercerConteo IS NULL OR TercerConteo = 0) 
+                             AND (SegundoConteo IS NOT NULL AND SegundoConteo != 0) 
+                        THEN SegundoConteo
+                        WHEN (TercerConteo IS NOT NULL AND TercerConteo != 0)
+                        THEN TercerConteo
+                    END AS ConteoFinal
+                FROM Bitacora_Inventario
+                WHERE StorageBin = '$stor_bin' 
+                  AND NumeroParte = '$materialParte'";
     $rsconsPro = mysqli_query($conexion, $consP);
 
     if ($rsconsPro) {
@@ -35,14 +48,14 @@ foreach ($data as $record) {
             $updatedData[] = [
                 'storBin' => $stor_bin,
                 'materialNo' => $materialParte,
-                'PrimerConteo' => $row['PrimerConteo']
+                'conteoFinal' => $row['ConteoFinal']
             ];
         } else {
             // Si no hay resultados, asignar valores predeterminados
             $updatedData[] = [
                 'storBin' => $stor_bin,
                 'materialNo' => $materialParte,
-                'PrimerConteo' => '0'
+                'conteoFinal' => '0'
             ];
         }
     } else {

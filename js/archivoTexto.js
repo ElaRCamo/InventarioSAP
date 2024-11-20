@@ -65,9 +65,6 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
         const originalContent = event.target.result;
         const originalLines = originalContent.split(/\r?\n/); // Divide el archivo en líneas
 
-        console.log("Contenido original del archivo:");
-        console.log(originalContent); // Verifica que se carga el archivo correctamente
-
         const updatedLines = originalLines.map((line) => {
             // Divide la línea en partes basándose en espacios/tabulaciones
             const parts = line.trim().split(/\s+/);
@@ -86,8 +83,8 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
 
                 if (matchingData) {
                     console.log(`Coincidencia encontrada para storBin: ${storBin}, materialNo: ${materialNo}`);
-                    console.log(`Reemplazando ______________ con: ${matchingData.PrimerConteo}`);
-                    return line.replace("______________", matchingData.PrimerConteo);
+                    console.log(`Reemplazando ______________ con: ${matchingData.conteoFinal}`);
+                    return line.replace("______________", matchingData.conteoFinal);
                 } else {
                     console.log(`No se encontró coincidencia para storBin: ${storBin}, materialNo: ${materialNo}`);
                 }
