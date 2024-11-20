@@ -58,7 +58,6 @@ async function manejarArchivo(file) {
         reader.readAsText(file);
     });
 }
-
 async function actualizarContenidoArchivo(file, dataFromBackend) {
     const reader = new FileReader();
 
@@ -66,19 +65,23 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
         const originalContent = event.target.result;
         const originalLines = originalContent.split(/\r?\n/);
 
-        // Reemplazar `______________` con `PrimerConteo` en las líneas correspondientes
         const updatedLines = originalLines.map((line) => {
-            if (/______________/.test(line)) {
-                const [storBin] = line.trim().split(/\s+/);
-                const matchingData = dataFromBackend.find(item => item.storBin === storBin);
-                if (matchingData) {
-                    return line.replace('______________', matchingData.PrimerConteo);
+            if (line.includes("______________")) {
+                // Extraer el `Material no.` para buscar coincidencias
+                const materialNoMatch = line.match(/\b\d{6,}\b/); // Busca un número largo (6 o más dígitos)
+                if (materialNoMatch) {
+                    const materialNo = materialNoMatch[0];
+                    const matchingData = dataFromBackend.find(item => item.materialNo === materialNo);
+
+                    if (matchingData) {
+                        // Reemplaza `______________` con `PrimerConteo`
+                        return line.replace("______________", matchingData.PrimerConteo);
+                    }
                 }
             }
             return line; // Mantener líneas no modificadas
         });
 
-        // Crear el nuevo contenido del archivo
         const finalContent = updatedLines.join("\n");
         const blob = new Blob([finalContent], { type: "text/plain" });
 
@@ -90,7 +93,6 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
 
     reader.readAsText(file);
 }
-
 
 async function enviarDatosAlBackend(data) {
     try {
