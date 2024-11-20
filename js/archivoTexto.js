@@ -151,8 +151,6 @@ document.getElementById('fileInputTxtS').addEventListener('change', async (event
     if (file) {
         // Procesar el archivo y enviar los datos al backend
         const dataToBackend = await manejarArchivoStorage(file);
-        console.log("Datos procesados para el backend:", dataToBackend);  // Verifica los datos antes de enviarlos
-
         const dataFromBackend = await enviarDatosAlBackendStorage(dataToBackend);
 
         if (dataFromBackend.length > 0) {
@@ -171,10 +169,7 @@ async function manejarArchivoStorage(file) {
 
     return new Promise((resolve, reject) => {
         reader.onload = async (event) => {
-
-
             const contenido = event.target.result;
-
             // Dividir las líneas del archivo
             const lineas = contenido.split(/\r?\n/);
 
@@ -182,23 +177,16 @@ async function manejarArchivoStorage(file) {
             console.log(contenido);
 
             // Filtrar las líneas que contienen datos válidos
-            const datos = lineas
+            const datos= lineas
                 .map((linea) => linea.trim())
                 .filter((linea) => /^[0-9]+\s+\w+/.test(linea)) // Filtrar líneas válidas (empiezan con un número seguido de texto)
                 .map((linea) => {
                     // Separar los datos de cada línea
-                    const partes = linea.split(/\s{2,}/); // Separar por espacios múltiples
+                    const partes = linea.split(/\s+/);
 
-                    if (partes.length >= 7) { // Verificar que haya suficientes columnas
-                        const storageUnit = partes[6].trim(); // Columna de Storage Unit
-                        if (storageUnit && storageUnit !== '____________') { // Validar contenido
-                            return { storageUnit };
-                        }
-
-                        console.log(`Procesando línea: ${linea}`);
-                        console.log(`Extracted storageUnit: ${storageUnit}`);
-                    }
-                    return null;
+                    return partes.length >= 7
+                        ? { storUnit: partes[7] }
+                        : null;
                 })
                 .filter(Boolean); // Eliminar entradas nulas
 
