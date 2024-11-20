@@ -249,9 +249,15 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
                 );
 
                 if (matchingData) {
+                    console.log(`Coincidencia encontrada para storageUnit: ${storageUnit}`);
+                    console.log(`Reemplazando ______________ con: ${matchingData.cantidad}`);
                     // Reemplazar el valor en la columna "Qty & UoM"
                     return line.replace(/______________/, matchingData.cantidad);
+                }else {
+                    console.log(`No se encontró coincidencia para storageUnit: ${storageUnit}`);
                 }
+            }else {
+                console.log("Formato de línea inesperado:", line);
             }
 
             return line; // Mantener la línea sin cambios si no hay coincidencia
