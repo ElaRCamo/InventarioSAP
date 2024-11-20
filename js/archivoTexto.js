@@ -84,6 +84,10 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
                     // Reemplazar ______________ con el valor de PrimerConteo
                     return line.replace("______________", matchingData.PrimerConteo);
                 }
+
+                console.log("Líneas actualizadas:", updatedLines.join("\n"));
+                console.log("Datos del backend:", JSON.stringify(dataFromBackend, null, 2));
+
             }
             return line; // Mantener la línea sin cambios si no hay coincidencia
         });
