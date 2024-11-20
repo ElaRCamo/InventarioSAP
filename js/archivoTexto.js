@@ -137,18 +137,19 @@ async function enviarDatosAlBackend(data) {
 /*****************************************************TABLA STORAGE_UNIT***********************************************/
 /**********************************************************************************************************************/
 
-
 document.getElementById('btnTxtStorage').addEventListener('click', () => {
     document.getElementById('fileInputTxtS').click();
 });
 
 document.getElementById('fileInputTxtS').addEventListener('change', async (event) => {
     const file = event.target.files[0]; // El archivo seleccionado
-    console.log("Archivo seleccionado:", file);  // Agrega esto para verificar el archivo
+    console.log("Archivo seleccionado:", file);  // Verifica el archivo seleccionado
 
     if (file) {
         // Procesar el archivo y enviar los datos al backend
         const dataToBackend = await manejarArchivoStorage(file);
+        console.log("Datos procesados para el backend:", dataToBackend);  // Verifica los datos antes de enviarlos
+
         const dataFromBackend = await enviarDatosAlBackendStorage(dataToBackend);
 
         if (dataFromBackend.length > 0) {
@@ -190,6 +191,8 @@ async function manejarArchivoStorage(file) {
                 })
                 .filter(Boolean); // Eliminar entradas nulas
 
+            console.log("Datos procesados desde el archivo:", datos);  // Verifica los datos procesados
+
             // Resolvemos la promesa con los datos procesados
             resolve(datos);
         };
@@ -201,6 +204,26 @@ async function manejarArchivoStorage(file) {
         reader.readAsText(file);
     });
 }
+
+async function enviarDatosAlBackendStorage(data) {
+    try {
+        const response = await fetch('dao/daoActualizarStorage-txt.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+
+        const jsonResponse = await response.json();
+        console.log("Respuesta del backend:", jsonResponse);  // Verifica la respuesta del backend
+        return jsonResponse; // Devolvemos los datos procesados por el backend
+    } catch (error) {
+        console.error('Error enviando datos al backend:', error);
+        return [];
+    }
+}
+
 async function actualizarArchivoStorage(file, dataFromBackend) {
     const reader = new FileReader();
 
@@ -222,7 +245,7 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
 
                 if (matchingData) {
                     // Reemplazar el valor en la columna "Qty & UoM"
-                    return line.replace(/______________/, matchingData.cantidad);
+                    return line.replace(/______________/, matchingData.cantidad || "0");
                 }
             }
 
@@ -244,7 +267,6 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
 
     reader.readAsText(file);
 }
-
 
 async function enviarDatosAlBackendStorage(data) {
     try {
