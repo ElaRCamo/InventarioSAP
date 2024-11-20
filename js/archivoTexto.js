@@ -58,7 +58,6 @@ async function manejarArchivo(file) {
         reader.readAsText(file);
     });
 }
-
 async function actualizarContenidoArchivo(file, dataFromBackend) {
     const reader = new FileReader();
 
@@ -66,14 +65,21 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
         const originalContent = event.target.result;
         const originalLines = originalContent.split(/\r?\n/); // Divide el archivo en líneas
 
+        console.log("Contenido original del archivo:");
+        console.log(originalContent); // Verifica que se carga el archivo correctamente
+
         const updatedLines = originalLines.map((line) => {
             // Extraer storBin y materialNo de la línea
             const storBinMatch = line.match(/\b\w+\b/); // Busca la primera palabra (storBin)
             const materialNoMatch = line.match(/\b\d{6,}\b/); // Busca el materialNo (número largo)
 
+            console.log("Procesando línea:", line);
+
             if (storBinMatch && materialNoMatch) {
                 const storBin = storBinMatch[0];
                 const materialNo = materialNoMatch[0];
+
+                console.log(`Extracted storBin: ${storBin}, materialNo: ${materialNo}`);
 
                 // Buscar coincidencia en dataFromBackend
                 const matchingData = dataFromBackend.find(
@@ -81,19 +87,21 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
                 );
 
                 if (matchingData) {
-                    // Reemplazar ______________ con el valor de PrimerConteo
+                    console.log(`Coincidencia encontrada para storBin: ${storBin}, materialNo: ${materialNo}`);
+                    console.log(`Reemplazando ______________ con: ${matchingData.PrimerConteo}`);
                     return line.replace("______________", matchingData.PrimerConteo);
+                } else {
+                    console.log(`No se encontró coincidencia para storBin: ${storBin}, materialNo: ${materialNo}`);
                 }
-
-                console.log("storage:",  item.storBin("\n"));
-                console.log("storage:",  item.materialNo("\n"));
-                console.log("PrimerConteo:",  matchingData.PrimerConteo("\n"));
-                console.log("Líneas actualizadas:", updatedLines.join("\n"));
-                console.log("Datos del backend:", JSON.stringify(dataFromBackend, null, 2));
-
+            } else {
+                console.log("No se pudo extraer storBin o materialNo de la línea.");
             }
+
             return line; // Mantener la línea sin cambios si no hay coincidencia
         });
+
+        console.log("Contenido actualizado del archivo:");
+        console.log(updatedLines.join("\n")); // Verifica el contenido final
 
         const finalContent = updatedLines.join("\n"); // Unir las líneas actualizadas
         const blob = new Blob([finalContent], { type: "text/plain" });
@@ -103,6 +111,9 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
         link.download = `actualizado_${file.name}`;
         link.click();
     };
+
+    console.log("Datos del backend recibidos:");
+    console.log(JSON.stringify(dataFromBackend, null, 2)); // Verifica los datos recibidos del backend
 
     reader.readAsText(file);
 }
