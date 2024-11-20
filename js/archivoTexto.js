@@ -68,6 +68,9 @@ async function actualizarContenidoArchivo(file, dataFromBackend) {
         const originalContent = event.target.result;
         const originalLines = originalContent.split(/\r?\n/); // Divide el archivo en líneas
 
+        //console.log("Contenido original del archivo:");
+        //console.log(originalContent);
+
         const updatedLines = originalLines.map((line) => {
             // Divide la línea en partes basándose en espacios/tabulaciones
             const parts = line.trim().split(/\s+/);
@@ -168,10 +171,15 @@ async function manejarArchivoStorage(file) {
 
     return new Promise((resolve, reject) => {
         reader.onload = async (event) => {
+
+
             const contenido = event.target.result;
 
             // Dividir las líneas del archivo
             const lineas = contenido.split(/\r?\n/);
+
+            console.log("Contenido original del archivo:");
+            console.log(contenido);
 
             // Filtrar las líneas que contienen datos válidos
             const datos = lineas
@@ -186,6 +194,9 @@ async function manejarArchivoStorage(file) {
                         if (storageUnit && storageUnit !== '____________') { // Validar contenido
                             return { storageUnit };
                         }
+
+                        console.log(`Procesando línea: ${linea}`);
+                        console.log(`Extracted storageUnit: ${storageUnit}`);
                     }
                     return null;
                 })
@@ -266,20 +277,4 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
     };
 
     reader.readAsText(file);
-}
-
-async function enviarDatosAlBackendStorage(data) {
-    try {
-        const response = await fetch('dao/daoActualizarStorage-txt.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-        return await response.json(); // Devolvemos los datos procesados por el backend
-    } catch (error) {
-        console.error('Error enviando datos al backend:', error);
-        return [];
-    }
 }
