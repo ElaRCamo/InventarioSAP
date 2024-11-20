@@ -185,7 +185,7 @@ async function manejarArchivoStorage(file) {
                     const partes = linea.split(/\s+/);
 
                     return partes.length >= 7
-                        ? { storUnit: partes[7] }
+                        ? { storUnit: partes[6] }
                         : null;
                 })
                 .filter(Boolean); // Eliminar entradas nulas
