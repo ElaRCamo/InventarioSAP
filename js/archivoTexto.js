@@ -24,45 +24,6 @@ document.getElementById('fileInputTxt').addEventListener('change', async (event)
 });
 
 
-
-
-/*
-
-async function manejarArchivo(file) {
-    const reader = new FileReader();
-
-    reader.onload = async (event) => {
-        const contenido = event.target.result;
-
-        // Dividir las líneas del archivo
-        const lineas = contenido.split(/\r?\n/);
-
-        // Filtrar las líneas que contienen datos válidos (ejemplo: columnas específicas)
-        const datos = lineas
-            .map((linea) => linea.trim()) // Quitar espacios innecesarios
-            .filter((linea) => /^[0-9]+\s+\w+/.test(linea)) // Coincidir con líneas que empiezan con un número y tienen datos
-            .map((linea) => {
-                const partes = linea.split(/\s+/); // Dividir la línea por espacios en blanco
-
-                // Extraer campos específicos (storBin y Material no.)
-                return {
-                    storBin: partes[1], // Ejemplo: Segundo elemento
-                    materialNo: partes[5], // Ejemplo: Sexto elemento
-                };
-            });
-
-        // Enviar datos al backend
-        const resultado = await enviarDatosAlBackend(datos);
-        console.log("Datos procesados y devueltos del backend:", resultado);
-    };
-
-    reader.onerror = (error) => {
-        console.error("Error al leer el archivo:", error);
-    };
-
-    reader.readAsText(file);
-}
-*/
 async function manejarArchivo(file) {
     const reader = new FileReader();
 
@@ -79,11 +40,12 @@ async function manejarArchivo(file) {
                 .filter((linea) => /^[0-9]+\s+\w+/.test(linea))
                 .map((linea) => {
                     const partes = linea.split(/\s+/);
-                    return {
-                        storBin: partes[1],
-                        materialNo: partes[5],
-                    };
-                });
+                    return partes.length >= 6
+                        ? { storBin: partes[1], materialNo: partes[5] }
+                        : null;
+                })
+                .filter(Boolean);
+
 
             // Resolvemos la promesa con los datos procesados
             resolve(datos);
@@ -97,82 +59,38 @@ async function manejarArchivo(file) {
     });
 }
 
-/*
 async function actualizarContenidoArchivo(file, dataFromBackend) {
-    // Verifica si 'file' es un Blob válido
-    if (!(file instanceof Blob)) {
-        console.error("El archivo no es válido:", file);
-        return;
-    }
-
     const reader = new FileReader();
 
     reader.onload = function (event) {
-        // Verifica que el contenido del archivo se esté leyendo correctamente
-        const lines = event.target.result.split("\n"); // Dividimos el contenido por líneas
-        const updatedLines = lines.map((line) => {
-            // Lógica para actualizar las líneas
-            // ...
+        const originalContent = event.target.result;
+        const originalLines = originalContent.split(/\r?\n/);
+
+        // Reemplazar `______________` con `PrimerConteo` en las líneas correspondientes
+        const updatedLines = originalLines.map((line) => {
+            if (/______________/.test(line)) {
+                const [storBin] = line.trim().split(/\s+/);
+                const matchingData = dataFromBackend.find(item => item.storBin === storBin);
+                if (matchingData) {
+                    return line.replace('______________', matchingData.PrimerConteo);
+                }
+            }
+            return line; // Mantener líneas no modificadas
         });
 
-        // Generamos el contenido actualizado
-        const updatedContent = updatedLines.join("\n");
-
-        // Creamos el Blob con el contenido actualizado
-        const blob = new Blob([updatedContent], { type: "text/plain" });
-
-        // Creamos el enlace para la descarga
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = "archivo_actualizado.txt"; // Nombre del archivo que se descargará
-
-        // Simulamos el clic en el enlace para iniciar la descarga
-        link.click();
-        document.body.removeChild(link);
-    };
-
-    // Leemos el archivo (asegúrate de que 'file' sea un objeto File válido)
-    reader.readAsText(file);
-}
-
-*/
-
-async function actualizarContenidoArchivo(file, dataFromBackend) {
-    if (!(file instanceof Blob)) {
-        console.error("El archivo no es válido:", file);
-        return;
-    }
-
-    const reader = new FileReader();
-
-    reader.onload = function (event) {
-        // El contenido del archivo original
-        const originalContent = event.target.result;
-
-        // Convertir los datos del backend en un formato que se pueda incluir en el archivo
-        const updatedContent = dataFromBackend.map(item => {
-            return `${item.storBin}, ${item.materialNo}, ${item.PrimerConteo}`;
-        }).join("\n");
-
-        // Si deseas añadir los datos del backend al final del contenido original:
-        const finalContent = originalContent + "\n" + updatedContent;
-
-        // Creamos el Blob con el contenido actualizado
+        // Crear el nuevo contenido del archivo
+        const finalContent = updatedLines.join("\n");
         const blob = new Blob([finalContent], { type: "text/plain" });
 
-        // Creamos el enlace para la descarga
         const link = document.createElement("a");
         link.href = URL.createObjectURL(blob);
-        link.download = "archivo_actualizado.txt"; // Nombre del archivo que se descargará
-
-        // Simulamos el clic en el enlace para iniciar la descarga
+        link.download = `actualizado_${file.name}`;
         link.click();
-        document.body.removeChild(link);
     };
 
-    // Leemos el archivo original
     reader.readAsText(file);
 }
+
 
 async function enviarDatosAlBackend(data) {
     try {
