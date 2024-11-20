@@ -21,30 +21,30 @@ if (!$conexion) {
 $updatedData = [];
 
 foreach ($data as $record) {
-    $stor_bin = mysqli_real_escape_string($conexion, $record['storBin']);
+    $storageUnit = mysqli_real_escape_string($conexion, $record['storBin']);
 
     $consP = "SELECT Cantidad
                 FROM Storage_Unit
-                WHERE Storage_Bin = '$stor_bin'";
+                WHERE Id_StorageUnit = '$storageUnit'";
     $rsconsPro = mysqli_query($conexion, $consP);
 
     if ($rsconsPro) {
         if ($row = mysqli_fetch_assoc($rsconsPro)) {
             $updatedData[] = [
-                'storBin' => $stor_bin,
+                'storageUnit' => $storageUnit,
                 'cantidad' => $row['Cantidad']
             ];
         } else {
             // Si no hay resultados, asignar valores predeterminados
             $updatedData[] = [
-                'storBin' => $stor_bin,
+                'storageUnit' => $storageUnit,
                 'cantidad' => '0'
             ];
         }
     } else {
         // Si ocurre un error en la consulta, registrar el error
         $updatedData[] = [
-            'storBin' => $stor_bin,
+            'storageUnit' => $storageUnit,
             'error' => mysqli_error($conexion)
         ];
     }
