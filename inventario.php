@@ -32,7 +32,7 @@
                     <button class="btn btn-secondary text-right btnExcel" id="btnExcelBitacora"> Cargar Excel Bitacora</button>
                     <input type="file" id="fileInputBitacora" accept=".xlsx, .xls" style="display: none;" />
 
-                    <button class="btn btn-secondary text-right btnExcel" id="btnTxtBitacora"> Cargar txt </button>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnTxtBitacora"> Actualizar txt </button>
                     <input type="file" id="fileInputTxt" accept=".txt" style="display: none;" />
 
                     <table class="table table-striped table-bordered mt-3" id="tablaBitacora">
@@ -54,6 +54,35 @@
                         </tr>
                         </thead>
                         <tbody id="bodyBitacora"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="tabla-section" id="sectionStorage">
+        <div class=""></div>
+        <div class="container">
+            <div class="row">
+                <div class="container mt-5">
+                    <h2 class="text-center">Tabla Storage</h2>
+                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelStorage"> Cargar Excel Storage</button>
+                    <input type="file" id="fileInputStorage" accept=".xlsx, .xls" style="display: none;" />
+
+                    <button class="btn btn-secondary text-right btnExcel" id="btnTxtStorage"> Actualizar txt </button>
+                    <input type="file" id="fileInputTxtS" accept=".txt" style="display: none;" />
+
+                    <table class="table table-striped table-bordered mt-3" id="tablaStorage">
+                        <thead>
+                        <tr>
+                            <th>id_StorageUnit</th>
+                            <th>Numero_Parte</th>
+                            <th>Cantidad</th>
+                            <th>Storage_Bin</th>
+                            <th>Storage_Type</th>
+                        </tr>
+                        </thead>
+                        <tbody id="bodyStorage"></tbody>
                     </table>
                 </div>
             </div>
@@ -101,31 +130,6 @@
                         </tr>
                         </thead>
                         <tbody id="bodyUbicaciones"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="tabla-section" id="sectionStorage">
-        <div class=""></div>
-        <div class="container">
-            <div class="row">
-                <div class="container mt-5">
-                    <h2 class="text-center">Tabla Storage</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelStorage"> Cargar Excel Storage</button>
-                    <input type="file" id="fileInputStorage" accept=".xlsx, .xls" style="display: none;" />
-                    <table class="table table-striped table-bordered mt-3" id="tablaStorage">
-                        <thead>
-                        <tr>
-                            <th>id_StorageUnit</th>
-                            <th>Numero_Parte</th>
-                            <th>Cantidad</th>
-                            <th>Storage_Bin</th>
-                            <th>Storage_Type</th>
-                        </tr>
-                        </thead>
-                        <tbody id="bodyStorage"></tbody>
                     </table>
                 </div>
             </div>
