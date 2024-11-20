@@ -230,8 +230,8 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
         const originalContent = event.target.result;
         const originalLines = originalContent.split(/\r?\n/); // Divide el archivo en líneas
 
-        console.log("Contenido original del archivo:");
-        console.log(originalContent);
+        //console.log("Contenido original del archivo:");
+        //console.log(originalContent);
 
         const updatedLines = originalLines.map((line) => {
             // Divide la línea en partes basándose en espacios/tabulaciones
@@ -240,8 +240,8 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
             if (parts.length >= 8) { // Verificar que haya suficientes columnas
                 const storageUnit = parts[6].trim(); // Obtener la columna Storage Unit
 
-                console.log(`Procesando línea: ${line}`);
-                console.log(`Extracted storageUnit: ${storageUnit}`);
+                //console.log(`Procesando línea: ${line}`);
+                //console.log(`Extracted storageUnit: ${storageUnit}`);
 
                 // Buscar coincidencia en dataFromBackend
                 const matchingData = dataFromBackend.find(
@@ -249,15 +249,15 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
                 );
 
                 if (matchingData) {
-                    console.log(`Coincidencia encontrada para storageUnit: ${storageUnit}`);
-                    console.log(`Reemplazando ______________ con: ${matchingData.cantidad}`);
+                    //console.log(`Coincidencia encontrada para storageUnit: ${storageUnit}`);
+                    //console.log(`Reemplazando ______________ con: ${matchingData.cantidad}`);
                     // Reemplazar el valor en la columna "Qty & UoM"
                     return line.replace(/____________/, matchingData.cantidad);
                 }else {
-                    console.log(`No se encontró coincidencia para storageUnit: ${storageUnit}`);
+                    //console.log(`No se encontró coincidencia para storageUnit: ${storageUnit}`);
                 }
             }else {
-                console.log("Formato de línea inesperado:", line);
+                //console.log("Formato de línea inesperado:", line);
             }
 
             return line; // Mantener la línea sin cambios si no hay coincidencia
