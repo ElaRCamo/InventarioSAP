@@ -173,8 +173,8 @@ async function manejarArchivoStorage(file) {
             // Dividir las líneas del archivo
             const lineas = contenido.split(/\r?\n/);
 
-            console.log("Contenido original del archivo:");
-            console.log(contenido);
+            //console.log("Contenido original del archivo:");
+            //console.log(contenido);
 
             // Filtrar las líneas que contienen datos válidos
             const datos= lineas
@@ -190,7 +190,7 @@ async function manejarArchivoStorage(file) {
                 })
                 .filter(Boolean); // Eliminar entradas nulas
 
-            console.log("Datos procesados desde el archivo:", datos);  // Verifica los datos procesados
+            //console.log("Datos procesados desde el archivo:", datos);  // Verifica los datos procesados
 
             // Resolvemos la promesa con los datos procesados
             resolve(datos);
@@ -215,7 +215,7 @@ async function enviarDatosAlBackendStorage(data) {
         });
 
         const jsonResponse = await response.json();
-        console.log("Respuesta del backend:", jsonResponse);  // Verifica la respuesta del backend
+        //console.log("Respuesta del backend:", jsonResponse);  // Verifica la respuesta del backend
         return jsonResponse; // Devolvemos los datos procesados por el backend
     } catch (error) {
         console.error('Error enviando datos al backend:', error);
@@ -230,12 +230,18 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
         const originalContent = event.target.result;
         const originalLines = originalContent.split(/\r?\n/); // Divide el archivo en líneas
 
+        console.log("Contenido original del archivo:");
+        console.log(originalContent);
+
         const updatedLines = originalLines.map((line) => {
             // Divide la línea en partes basándose en espacios/tabulaciones
-            const parts = line.trim().split(/\s{2,}/); // Separar por espacios múltiples
+            const parts = line.trim().split(/\s+/); // Separar por espacios múltiples
 
             if (parts.length >= 8) { // Verificar que haya suficientes columnas
                 const storageUnit = parts[6].trim(); // Obtener la columna Storage Unit
+
+                console.log(`Procesando línea: ${line}`);
+                console.log(`Extracted storageUnit: ${storageUnit}`);
 
                 // Buscar coincidencia en dataFromBackend
                 const matchingData = dataFromBackend.find(
@@ -244,7 +250,7 @@ async function actualizarArchivoStorage(file, dataFromBackend) {
 
                 if (matchingData) {
                     // Reemplazar el valor en la columna "Qty & UoM"
-                    return line.replace(/______________/, matchingData.cantidad || "0");
+                    return line.replace(/______________/, matchingData.cantidad);
                 }
             }
 
