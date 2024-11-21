@@ -227,6 +227,16 @@
         //cargarDatosBin();
     });
 
+    document.getElementById("tooltipBitacora").addEventListener("click", function() {
+        mostrarImagenTooltip(
+            "tooltipBitacora",
+            "https://grammermx.com/excelInventario/imgs/bitacora.png",
+            300,
+            180
+        );
+    });
+
+
 </script>
 
 <!-- -Archivos de jQuery-->

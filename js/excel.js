@@ -45,9 +45,6 @@ function mostrarImagenTooltip(idTooltip, imageUrl, width, height) {
 /********************************************************TABLA BITACORA***********************************************/
 /**********************************************************************************************************************/
 
-//Tooltip
-mostrarImagenTooltip("tooltipBitacora",'https://grammermx.com/excelInventario/imgs/bitacora.png', 300, 180);
-
 function cargarDatosBitacora() {
     fetch('dao/daoConsultarBitacora.php')
         .then(response => response.json())
