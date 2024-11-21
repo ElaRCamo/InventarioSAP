@@ -1,0 +1,92 @@
+Pasos para ejecutar el script:
+1. Asegúrate de que las imágenes que quieres convertir estén en C:\Fotos.
+
+2. Guarda este script como ConvertToPNG.ps1 en la misma carpeta (C:\Fotos).
+
+3. Abre PowerShell y establece la política de ejecución si no lo has hecho ya:
+
+    Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+
+4. Cambia al directorio donde está el script:
+
+    cd C:\Fotos
+
+5. Ejecuta el script:
+
+    .\ConvertToPNG.ps1
+
+
+
+Si no funciona intentar pegar directamente el contenido del script:
+
+Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Try the new cross-platform PowerShell https://aka.ms/pscore6
+
+PS C:\Users\Ex-Reyes-M> cd C:\Fotos
+>>
+PS C:\Fotos> Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+>>
+
+Execution Policy Change
+The execution policy helps protect you from scripts that you do not trust. Changing the execution policy might expose
+you to the security risks described in the about_Execution_Policies help topic at
+https:/go.microsoft.com/fwlink/?LinkID=135170. Do you want to change the execution policy?
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "N"): y
+PS C:\Fotos> .\ConvertToPNG.ps1
+>>
+Buscando imÃ¡genes en C:\Fotos...
+No se encontraron imÃ¡genes para convertir.
+Presiona Enter para salir:
+
+PS C:\Fotos> # Establecer la ruta de la carpeta de entrada y la de salida
+>> $inputFolder = "C:\Fotos"
+>> $outputFolder = "C:\Fotos\fotosPNG"
+>>
+>> # Crear la carpeta de salida si no existe
+>> if (!(Test-Path -Path $outputFolder)) {
+>>     Write-Host "Creando carpeta de salida: $outputFolder"
+>>     New-Item -ItemType Directory -Path $outputFolder
+>> }
+>>
+>> # Buscar imágenes con extensiones específicas (sin importar mayúsculas/minúsculas)
+>> Write-Host "Buscando imágenes en $inputFolder..."
+>> $images = Get-ChildItem -Path $inputFolder -Recurse -Include *.jpg, *.jpeg, *.bmp, *.gif, *.tiff, *.png, *.PNG -File
+>>
+>> # Mostrar los archivos encontrados
+>> if ($images.Count -eq 0) {
+>>     Write-Host "No se encontraron imágenes para convertir." -ForegroundColor Red
+>> } else {
+>>     Write-Host "$($images.Count) imágenes encontradas:"
+>>     $images | ForEach-Object { Write-Host $_.FullName }
+>> }
+>>
+>> # Convertir imágenes
+>> foreach ($image in $images) {
+>>     $inputFile = $image.FullName
+>>
+>>     # Cambiar la extensión a .png (en minúsculas)
+>>     $outputFile = Join-Path $outputFolder ([System.IO.Path]::ChangeExtension($image.Name.ToLower(), ".png"))
+>>
+>>     Write-Host "Convirtiendo: $inputFile -> $outputFile"
+>>
+>>     # Convertir a PNG
+>>     Add-Type -AssemblyName System.Drawing
+>>     $img = [System.Drawing.Image]::FromFile($inputFile)
+>>     $img.Save($outputFile, [System.Drawing.Imaging.ImageFormat]::Png)
+>>     $img.Dispose()
+>> }
+>>
+>> Write-Host "Proceso completado." -ForegroundColor Green
+>> Read-Host -Prompt "Presiona Enter para salir"
+>>
+Buscando imágenes en C:\Fotos...
+1212 imágenes encontradas:
+Proceso completado.
+Presiona Enter para salir:
+
+
+
+
+
