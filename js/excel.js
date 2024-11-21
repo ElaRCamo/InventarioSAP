@@ -4,7 +4,7 @@
 
 function mostrarImagenTooltip(idTooltip, imageUrl, width, height) {
 
-    var tooltip = document.getElementById(idTooltip);
+    let tooltip = document.getElementById(idTooltip);
 
     tippy(tooltip, {
         trigger: 'click',
