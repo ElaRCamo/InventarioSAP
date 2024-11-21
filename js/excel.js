@@ -21,11 +21,18 @@ function mostrarImagenTooltip(idTooltip, imageUrl, width, height) {
                     image.height = height;
                     image.style.display = 'block';
                     image.style.margin = '0 auto'; // Center the image
+                    image.style.borderRadius = '5px'; // Rounded corners
+                    image.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)'; // Subtle shadow
                     image.src = url;
 
                     const container = document.createElement('div');
-                    container.style.textAlign = 'start'; // Center align text
-                    container.style.fontSize = '0.7rem'; // Smaller font size
+                    container.style.textAlign = 'center'; // Center align content
+                    container.style.fontSize = '0.8rem'; // Adjust font size
+                    container.style.padding = '10px'; // Add some padding
+                    container.style.backgroundColor = '#ffffff'; // Tooltip background
+                    container.style.borderRadius = '8px'; // Rounded corners for tooltip
+                    container.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)'; // Tooltip shadow
+
                     container.appendChild(image);
 
                     // Update the tippy content with the container
