@@ -232,7 +232,7 @@
             "tooltipBitacora",
             "https://grammermx.com/excelInventario/imgs/bitacora.png",
             350,
-            120
+            110
         );
     });
 
