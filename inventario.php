@@ -231,7 +231,7 @@
         mostrarImagenTooltip(
             "tooltipBitacora",
             "https://grammermx.com/excelInventario/imgs/bitacora.png",
-            300,
+            350,
             180
         );
     });
