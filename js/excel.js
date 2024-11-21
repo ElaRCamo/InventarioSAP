@@ -2,13 +2,10 @@
 /********************************************************TOOLTIPS******************************************************/
 /**********************************************************************************************************************/
 
-function initTooltips(idTooltip,rutaImg, width, height) {
+function mostrarImagenTooltip(idTooltip, imageUrl, width, height) {
+
     var tooltip = document.getElementById(idTooltip);
-    tooltip.forEach(function(tooltip) {
-        mostrarImagenTooltip(tooltip, rutaImg, width, height);
-    });
-}
-function mostrarImagenTooltip(tooltip, imageUrl, width, height) {
+
     tippy(tooltip, {
         trigger: 'click',
         animation: 'shift-away',
@@ -49,7 +46,7 @@ function mostrarImagenTooltip(tooltip, imageUrl, width, height) {
 /**********************************************************************************************************************/
 
 //Tooltip
-initTooltips("tooltipBitacora",'https://grammermx.com/excelInventario/imgs/bitacora.png', 300, 180);
+mostrarImagenTooltip("tooltipBitacora",'https://grammermx.com/excelInventario/imgs/bitacora.png', 300, 180);
 
 function cargarDatosBitacora() {
     fetch('dao/daoConsultarBitacora.php')
