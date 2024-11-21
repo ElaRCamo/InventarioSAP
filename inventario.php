@@ -18,11 +18,13 @@
     <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" >
     <link href="https://fonts.googleapis.com/css2?family=Agdasima:wght@400;700&display=swap" rel="stylesheet">
 
+    <!-- Tippy.js core styles -->
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css">
+
 </head>
 
 <body>
 <main>
-
     <section class="tabla-section" id="sectionBitacora">
         <div class=""></div>
         <div class="container">
@@ -31,6 +33,7 @@
                     <h2 class="text-center">Tabla Bitacora</h2>
                     <button class="btn btn-secondary text-right btnExcel" id="btnExcelBitacora"> Cargar Excel Bitacora</button>
                     <input type="file" id="fileInputBitacora" accept=".xlsx, .xls" style="display: none;" />
+                    <i class="far fa-question-circle position-absolute" id="tooltipBitacora"></i>
 
                     <button class="btn btn-secondary text-right btnExcel" id="btnTxtBitacora"> Actualizar txt </button>
                     <input type="file" id="fileInputTxt" accept=".txt" style="display: none;" />

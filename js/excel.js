@@ -1,6 +1,56 @@
 /**********************************************************************************************************************/
+/********************************************************TOOLTIPS******************************************************/
+/**********************************************************************************************************************/
+
+function initTooltips(idTooltip,rutaImg, width, height) {
+    var tooltip = document.querySelectorAll(idTooltip);
+    tooltip.forEach(function(tooltip) {
+        mostrarImagenTooltip(tooltip, rutaImg, width, height);
+    });
+}
+function mostrarImagenTooltip(tooltip, imageUrl, width, height) {
+    tippy(tooltip, {
+        trigger: 'click',
+        animation: 'shift-away',
+        theme: 'light',
+        onShow(instance) {
+            fetch(imageUrl)
+                .then((response) => response.blob())
+                .then((blob) => {
+                    // Convert the blob into a URL
+                    const url = URL.createObjectURL(blob);
+                    const image = new Image();
+                    image.width = width;
+                    image.height = height;
+                    image.style.display = 'block';
+                    image.style.margin = '0 auto'; // Center the image
+                    image.src = url;
+
+                    const container = document.createElement('div');
+                    container.style.textAlign = 'start'; // Center align text
+                    container.style.fontSize = '0.7rem'; // Smaller font size
+                    container.appendChild(image);
+
+                    // Update the tippy content with the container
+                    instance.setContent(container);
+                })
+                .catch((error) => {
+                    // Fallback if the network request failed
+                    instance.setContent(`Request failed. ${error}`);
+                });
+        },
+        arrow: true, // Enable arrow
+    });
+}
+
+
+/**********************************************************************************************************************/
 /********************************************************TABLA BITACORA***********************************************/
 /**********************************************************************************************************************/
+
+//Tooltip
+initTooltips("tooltipBitacora",'https://grammermx.com/excelInventario/imgs/bitacora.png', 300, 180);
+
 function cargarDatosBitacora() {
     fetch('dao/daoConsultarBitacora.php')
         .then(response => response.json())
@@ -107,6 +157,8 @@ async function insertarExcelBitacora(file) {
         });
     }
 }
+
+
 /**********************************************************************************************************************/
 /********************************************************TABLA AREA***************************************************/
 /**********************************************************************************************************************/
