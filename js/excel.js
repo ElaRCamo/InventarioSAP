@@ -3,47 +3,42 @@
 /**********************************************************************************************************************/
 
 function mostrarImagenTooltip(idTooltip, imageUrl, width, height) {
+    const tooltip = document.getElementById(idTooltip);
 
-    let tooltip = document.getElementById(idTooltip);
-
+    // Configuración de Tippy.js
     tippy(tooltip, {
-        trigger: 'click',
+        trigger: 'click', // Mostrar el tooltip al hacer clic
         animation: 'shift-away',
         theme: 'light',
+        arrow: true, // Mostrar flecha en el tooltip
+        allowHTML: true, // Permitir contenido HTML dentro del tooltip
         onShow(instance) {
-            fetch(imageUrl)
-                .then((response) => response.blob())
-                .then((blob) => {
-                    // Convert the blob into a URL
-                    const url = URL.createObjectURL(blob);
-                    const image = new Image();
-                    image.width = width;
-                    image.height = height;
-                    image.style.display = 'block';
-                    image.style.margin = '0 auto'; // Center the image
-                    image.style.borderRadius = '5px'; // Rounded corners
-                    image.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)'; // Subtle shadow
-                    image.src = url;
+            // Crear una estructura HTML personalizada
+            const container = document.createElement('div');
+            container.style.display = 'flex';
+            container.style.flexDirection = 'column';
+            container.style.alignItems = 'center';
+            container.style.padding = '10px';
+            container.style.backgroundColor = '#fff';
+            container.style.borderRadius = '8px';
+            container.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+            container.style.width = `${width}px`;
+            container.style.height = `${height}px`;
 
-                    const container = document.createElement('div');
-                    container.style.textAlign = 'center'; // Center align content
-                    container.style.fontSize = '0.8rem'; // Adjust font size
-                    container.style.padding = '10px'; // Add some padding
-                    container.style.backgroundColor = '#ffffff'; // Tooltip background
-                    container.style.borderRadius = '8px'; // Rounded corners for tooltip
-                    container.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)'; // Tooltip shadow
+            // Crear el elemento de imagen
+            const image = new Image();
+            image.src = imageUrl;
+            image.style.width = '100%'; // Ajustar al ancho del contenedor
+            image.style.height = '100%'; // Ajustar al alto del contenedor
+            image.style.objectFit = 'contain'; // Escalar la imagen para que no se deforme
+            image.style.borderRadius = '5px';
 
-                    container.appendChild(image);
+            // Agregar la imagen al contenedor
+            container.appendChild(image);
 
-                    // Update the tippy content with the container
-                    instance.setContent(container);
-                })
-                .catch((error) => {
-                    // Fallback if the network request failed
-                    instance.setContent(`Request failed. ${error}`);
-                });
+            // Asignar el contenedor al contenido del tooltip
+            instance.setContent(container);
         },
-        arrow: true, // Enable arrow
     });
 }
 
