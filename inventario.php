@@ -37,7 +37,7 @@
                     <h2 class="text-center">Tabla Bitacora</h2>
                     <button class="btn btn-secondary text-right btnExcel" id="btnExcelBitacora"> Cargar Excel Bitacora</button>
                     <input type="file" id="fileInputBitacora" accept=".xlsx, .xls" style="display: none;" />
-                    <i class="far fa-question-circle position-absolute" id="tooltipBitacora"></i>
+                    <i class="far fa-question-circle position-absolute" id="tooltipBitacora">?</i>
 
                     <button class="btn btn-secondary text-right btnExcel" id="btnTxtBitacora"> Actualizar txt </button>
                     <input type="file" id="fileInputTxt" accept=".txt" style="display: none;" />
