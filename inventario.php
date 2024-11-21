@@ -16,6 +16,7 @@
 
     <!-- CSS FILES -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,10 +38,11 @@
                     <h2 class="text-center">Tabla Bitacora</h2>
                     <button class="btn btn-secondary text-right btnExcel" id="btnExcelBitacora"> Cargar Excel Bitacora</button>
                     <input type="file" id="fileInputBitacora" accept=".xlsx, .xls" style="display: none;" />
-                    <i class="far fa-question-circle position-absolute" id="tooltipBitacora">?</i>
 
                     <button class="btn btn-secondary text-right btnExcel" id="btnTxtBitacora"> Actualizar txt </button>
                     <input type="file" id="fileInputTxt" accept=".txt" style="display: none;" />
+
+                    <i class="far fa-question-circle position-absolute" id="tooltipBitacora">?</i>
 
                     <table class="table table-striped table-bordered mt-3" id="tablaBitacora">
                         <thead>
