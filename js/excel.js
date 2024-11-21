@@ -3,7 +3,7 @@
 /**********************************************************************************************************************/
 
 function initTooltips(idTooltip,rutaImg, width, height) {
-    var tooltip = document.querySelectorAll(idTooltip);
+    var tooltip = document.getElementById(idTooltip);
     tooltip.forEach(function(tooltip) {
         mostrarImagenTooltip(tooltip, rutaImg, width, height);
     });
