@@ -229,7 +229,7 @@
 
 </script>
 
-<script src="https://unpkg.com/@tippyjs/core@6"></script>
+<script src="https://unpkg.com/tippy.js@6"></script>
 
 <!-- -Archivos de jQuery-->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
