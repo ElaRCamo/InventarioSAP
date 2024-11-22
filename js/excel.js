@@ -362,52 +362,43 @@ function cargarDatosStorage() {
     fetch('dao/daoConsultarStorage.php')
         .then(response => response.json())
         .then(data => {
-            // Verificar la respuesta completa
-            console.log('Datos recibidos:', data);
+            console.log('Datos recibidos:', data); // Mensaje de depuración para ver los datos completos
 
-            const tableBody = document.getElementById('bodyPStorage');
+            const tableBody = document.getElementById('bodyStorage');
             tableBody.innerHTML = ''; // Limpiar el contenido anterior
 
-            // Verificar si "data" y "data.data" existen
+            // Verificar si hay datos en "data"
             if (data && data.data) {
-                console.log('Datos disponibles en "data.data":', data.data); // Verifica si hay datos
+                console.log('Datos disponibles en "data.data":', data.data); // Verifica si hay datos en data.data
+                data.data.forEach(storage => {
+                    console.log('Procesando storage:', storage); // Verifica cada elemento procesado
 
-                // Comprobar si "data.data" es un arreglo
-                if (Array.isArray(data.data)) {
-                    data.data.forEach((storage, index) => {
-                        console.log(`Procesando elemento ${index}:`, storage);
+                    const row = document.createElement('tr');
 
-                        // Asegúrate de que las propiedades existan
-                        if (storage.id_StorageUnit && storage.Numero_Parte && storage.Cantidad && storage.Storage_Bin && storage.Storage_Type) {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td>${storage.id_StorageUnit}</td>
-                                <td>${storage.Numero_Parte}</td>
-                                <td>${storage.Cantidad}</td>
-                                <td>${storage.Storage_Bin}</td>
-                                <td>${storage.Storage_Type}</td>
-                            `;
-                            tableBody.appendChild(row);
-                        } else {
-                            console.error(`Faltan datos en el objeto en el índice ${index}:`, storage);
-                        }
-                    });
-                } else {
-                    console.error('data.data no es un arreglo:', data.data);
-                }
+                    // Crear celdas para cada columna
+                    row.innerHTML = `
+                        <td>${storage.id_StorageUnit}</td>
+                        <td>${storage.Numero_Parte}</td>
+                        <td>${storage.Cantidad}</td>
+                        <td>${storage.Storage_Bin}</td>
+                        <td>${storage.Storage_Type}</td>
+                    `;
+
+                    // Agregar la fila a la tabla
+                    tableBody.appendChild(row);
+                });
             } else {
+                console.log('No hay datos disponibles'); // Mensaje de depuración cuando no hay datos
                 // Si no hay datos, mostrar un mensaje en la tabla
-                console.log('No hay datos disponibles');
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="5" class="text-center">No hay datos disponibles</td>';
                 tableBody.appendChild(row);
             }
         })
         .catch(error => {
-            console.error('Error al cargar los datos:', error); // Captura el error y muestra el mensaje
+            console.error('Error al cargar los datos:', error); // Captura y muestra el error en consola
         });
 }
-
 
 /******************Cargar e insertar datos de Excel*******************/
 document.getElementById('btnExcelStorage').addEventListener('click', () => {
