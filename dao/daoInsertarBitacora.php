@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($inputData['bitacoraDatos']) && is_array($inputData['bitacoraDatos'])) {
         $todosExitosos = true;
         $errores = [];
+        $detalles = [];
 
         foreach ($inputData['bitacoraDatos'] as $registroBitacora) {
             // Validar y asignar valores
@@ -28,13 +29,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $errores[] = "Error al insertar el registro FolioMarbete: $FolioMarbete. " . $respuestaInsert['message'];
                     $todosExitosos = false;
                     break;  // Salir del ciclo si ocurre un error
+                }else{
+                    $detalles[] = $respuestaInsert['message'];
                 }
             }
         }
 
         // Respuesta final si todos fueron exitosos
         if ($todosExitosos) {
-            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Parte fueron actualizados correctamente.");
+            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Parte fueron actualizados correctamente.", "detalles" => $detalles);
         } else {
             $respuesta = array("status" => 'error', "message" => "Se encontraron errores al insertar los registros.", "detalles" => $errores);
         }
