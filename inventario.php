@@ -75,9 +75,9 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Storage</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelStorage"> Cargar Excel Storage</button>
+                    <button class="btn btn-success text-right btnExcel" id="btnExcelStorage"> Cargar Excel Storage</button>
                     <input type="file" id="fileInputStorage" accept=".xlsx, .xls" style="display: none;" />
-                    <button class="btn btn-success text-right btnExcel" id="tooltipStorage"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
+                    <button class="btn btn-secondary text-right btnExcel" id="tooltipStorage"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
 
                     <button class="btn btn-primary text-right btnExcel" id="btnTxtStorage"> Actualizar txt </button>
                     <input type="file" id="fileInputTxtS" accept=".txt" style="display: none;" />

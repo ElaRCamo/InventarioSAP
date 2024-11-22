@@ -13,18 +13,17 @@
 
 /*Colores tooltip*/
 .tippy-box[data-theme~='light'] {
-    background-color: #005195;
-    color: #f1f4f9;
-    border: 2px solid rgba(130, 175, 215, 0.1);
+    background-color: #f1f4f9;
+    color: navy;
 }
 
 /*arrow*/
 /* The border */
 .tippy-box[data-theme~='light'] > .tippy-svg-arrow > svg:first-child {
-    fill: #1733a1;
+    fill: #f1f4f9;
 }
 
 /* The fill */
 .tippy-box[data-theme~='light'] > .tippy-svg-arrow > svg:last-child {
-    fill: #1733a1;
+    fill: #f1f4f9;
 }
