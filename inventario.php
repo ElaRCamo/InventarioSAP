@@ -234,6 +234,8 @@
     document.addEventListener('DOMContentLoaded', function () {
         //cargarDatosParte();
         //cargarDatosBin();
+        cargarDatosStorage();
+
     });
 
     document.getElementById("tooltipBitacora").addEventListener("click", function() {
