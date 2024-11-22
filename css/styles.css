@@ -1,16 +1,3 @@
-
-/*TOOLTIP*/
-/*Ubica el logo de ? dentro del input
-#tooltipBitacora{
-    position: absolute;
-    right: 0.7rem;
-    top: 10%;
-    cursor: pointer;
-    color: #aaa; /* Color del ícono /
-    max-width: 1rem;
-    padding-top: 0.4rem;
-}*/
-
 /*Colores tooltip*/
 .tippy-box[data-theme~='light'] {
     background-color: #f1f4f9;
