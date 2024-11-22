@@ -110,30 +110,34 @@ async function insertarExcelBitacora(file) {
 
         // Obtener el rango completo de celdas
         const range = XLSX.utils.decode_range(worksheet['!ref']);
-        const jsonData = [];
 
-        // Iterar por todas las filas y columnas dentro del rango
+        // Construir datos JSON fila por fila
+        const jsonData = [];
         for (let row = range.s.r; row <= range.e.r; row++) {
             const rowData = [];
             for (let col = range.s.c; col <= range.e.c; col++) {
                 const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
                 const cell = worksheet[cellAddress];
-                rowData.push(cell ? cell.v : ""); // Si la celda está vacía, asignar un valor vacío
+                // Si la celda no existe, agregar un valor vacío
+                rowData.push(cell ? cell.v : "");
             }
             jsonData.push(rowData);
         }
 
-        // Separar encabezados y datos
-        const headers = jsonData[0] || []; // Primera fila como encabezado, aunque esté vacía
-        const bitacoraData = jsonData.slice(1).map((row) => {
-            return {
-                NumeroParte: row[0] || "", // Asegurar columna A
-                FolioMarbete: row[1] || "", // Columna B
-                StorageBin: row[2] || "", // Columna C
-                StorageType: row[3] || "", // Columna D
-                Area: row[4] || "" // Columna E
-            };
-        });
+        // Usar la primera fila como encabezado
+        const headers = jsonData[0] || [];
+        if (headers.length === 0) {
+            throw new Error("El archivo Excel no contiene encabezados en la primera fila.");
+        }
+
+        // Mapear las filas a objetos, asegurando que todas las columnas estén representadas
+        const bitacoraData = jsonData.slice(1).map((row) => ({
+            NumeroParte: row[0] || "", // Columna A
+            FolioMarbete: row[1] || "", // Columna B
+            StorageBin: row[2] || "", // Columna C
+            StorageType: row[3] || "", // Columna D
+            Area: row[4] || "" // Columna E
+        }));
 
         // Enviar los datos al backend
         const response = await fetch('dao/daoInsertarBitacora.php', {
@@ -156,7 +160,6 @@ async function insertarExcelBitacora(file) {
 
             cargarDatosBitacora();
         } else {
-            // Mostrar el mensaje de error que viene del backend
             throw new Error(result.message + ' Detalles: ' + result.detalles);
         }
     } catch (error) {
@@ -167,8 +170,6 @@ async function insertarExcelBitacora(file) {
         });
     }
 }
-
-
 
 /*
 async function insertarExcelBitacora(file) {
