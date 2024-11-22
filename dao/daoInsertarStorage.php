@@ -64,8 +64,8 @@ function insertarRegistrosStorage($id_StorageUnit, $Numero_Parte, $Cantidad, $St
 
         if ($consultaExistente->num_rows > 0) {
             // Si ya existe, se actualiza el registro
-            $updateParte = $conex->prepare("UPDATE `Storage_Unit` SET `Numero_Parte` = ?, `Cantidad` = ?, `Storage_Bin` = ?, `Storage_Bin` = ? WHERE `id_StorageUnit` = ?");
-            $updateParte->bind_param("issss", $Numero_Parte, $Cantidad, $Costo, $Storage_Bin, $Storage_Type, $id_StorageUnit);
+            $updateParte = $conex->prepare("UPDATE `Storage_Unit` SET `Numero_Parte` = ?, `Cantidad` = ?, `Storage_Bin` = ?, `Storage_Type` = ? WHERE `id_StorageUnit` = ?");
+            $updateParte->bind_param("ssssi", $Numero_Parte, $Cantidad, $Storage_Bin, $Storage_Type, $id_StorageUnit);
             $resultado = $updateParte->execute();
 
             if (!$resultado) {
