@@ -58,13 +58,13 @@ function insertarRegistrosBitacora($NumeroParte, $FolioMarbete, $StorageBin, $St
     $fechaHoy = date('Y-m-d H:i:s');
 
     if($NumeroParte === null){
-        $NumeroParte = "";
+        $NumeroParte = '';
     }
     if($StorageBin === null){
-        $StorageBin = "";
+        $StorageBin = '';
     }
     if($StorageType === null){
-        $StorageType = "";
+        $StorageType = '';
     }
 
     try {
