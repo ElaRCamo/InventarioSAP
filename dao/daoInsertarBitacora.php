@@ -70,14 +70,21 @@ function insertarRegistrosBitacora($NumeroParte, $FolioMarbete, $StorageBin, $St
         $StorageType = '';
     }
 
+    if (empty($FolioMarbete)) {
+        return array('status' => 'error', 'message' => 'El FolioMarbete es obligatorio.');
+    }
+
     try {
         // Consultar si el registro ya existe
         $consultaExistente = $conex->prepare("SELECT * FROM `Bitacora_Inventario` WHERE `FolioMarbete` = ?");
         $consultaExistente->bind_param("s", $FolioMarbete);
         $consultaExistente->execute();
         $consultaExistente->store_result();
+        error_log("Número de filas encontradas: " . $consultaExistente->num_rows);
+
 
         if ($consultaExistente->num_rows > 0) {
+            error_log("Actualizando registro con FolioMarbete: $FolioMarbete");
             // Si ya existe, se actualiza el registro
             $updateParte = $conex->prepare("UPDATE `Bitacora_Inventario` SET `NumeroParte` = ?, `StorageBin` = ?, `StorageType` = ?, `Area` = ?, `Fecha` = ? WHERE `FolioMarbete` = ?");
             $updateParte->bind_param("ssssss", $NumeroParte, $StorageBin, $StorageType, $Area, $fechaHoy,$FolioMarbete );
@@ -94,6 +101,7 @@ function insertarRegistrosBitacora($NumeroParte, $FolioMarbete, $StorageBin, $St
             $updateParte->close();
 
         } else {
+            error_log("Insertando registro con FolioMarbete: $FolioMarbete");
             // Si no existe, insertar el nuevo registro
             $insertParte = $conex->prepare("INSERT INTO `Bitacora_Inventario` (`NumeroParte`, `StorageBin`, `StorageType`, `Area`, `Fecha`, `FolioMarbete`) 
                                             VALUES (?, ?, ?, ?, ?, ?)");
