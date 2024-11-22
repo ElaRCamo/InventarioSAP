@@ -275,7 +275,7 @@
     document.getElementById("tooltiInventario").addEventListener("click", function() {
         mostrarImagenTooltip(
             "tooltiInventario",
-            "https://grammermx.com/excelInventario/imgs/inventario.png",
+            "https://grammermx.com/excelInventario/imgs/inventarioSap.png",
             320,
             120
         );

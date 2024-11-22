@@ -101,7 +101,6 @@ document.getElementById('fileInputBitacora').addEventListener('change', (event) 
         insertarExcelBitacora(file);
     }
 });
-
 async function insertarExcelBitacora(file) {
     try {
         // Leer el archivo Excel
@@ -109,20 +108,30 @@ async function insertarExcelBitacora(file) {
         const workbook = XLSX.read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-        // Configurar para incluir celdas vacías
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
-            header: 1, // Leer todas las filas y columnas, incluyendo encabezados
-            defval: null // Asegurar que las celdas vacías tengan un valor nulo
-        });
+        // Obtener el rango completo de celdas
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+        const jsonData = [];
 
-        // Mapear los datos, incluyendo columnas vacías
+        // Iterar por todas las filas y columnas dentro del rango
+        for (let row = range.s.r; row <= range.e.r; row++) {
+            const rowData = [];
+            for (let col = range.s.c; col <= range.e.c; col++) {
+                const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+                const cell = worksheet[cellAddress];
+                rowData.push(cell ? cell.v : ""); // Si la celda está vacía, asignar un valor vacío
+            }
+            jsonData.push(rowData);
+        }
+
+        // Separar encabezados y datos
+        const headers = jsonData[0] || []; // Primera fila como encabezado, aunque esté vacía
         const bitacoraData = jsonData.slice(1).map((row) => {
             return {
-                NumeroParte: row[0] || null, // Asegurar que siempre se lea la columna A
-                FolioMarbete: row[1] || null, // Columna B
-                StorageBin: row[2] || null, // Columna C
-                StorageType: row[3] || null, // Columna D
-                Area: row[4] || null // Columna E
+                NumeroParte: row[0] || "", // Asegurar columna A
+                FolioMarbete: row[1] || "", // Columna B
+                StorageBin: row[2] || "", // Columna C
+                StorageType: row[3] || "", // Columna D
+                Area: row[4] || "" // Columna E
             };
         });
 
@@ -150,7 +159,6 @@ async function insertarExcelBitacora(file) {
             // Mostrar el mensaje de error que viene del backend
             throw new Error(result.message + ' Detalles: ' + result.detalles);
         }
-
     } catch (error) {
         Swal.fire({
             icon: 'error',
@@ -159,6 +167,7 @@ async function insertarExcelBitacora(file) {
         });
     }
 }
+
 
 
 /*
@@ -676,49 +685,29 @@ document.getElementById('fileInputBin').addEventListener('change', (event) => {
         insertarExcelBin(file);
     }
 });
-
-
-async function insertarExcelBitacora(file) {
+async function insertarExcelBin(file) {
     try {
         // Leer el archivo Excel
         const data = await file.arrayBuffer();
         const workbook = XLSX.read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-        // Obtener el rango de celdas
-        const range = XLSX.utils.decode_range(worksheet['!ref']);
-        const jsonData = [];
-
-        // Iterar sobre todas las filas y columnas del rango
-        for (let row = range.s.r; row <= range.e.r; row++) {
-            const rowData = [];
-            for (let col = range.s.c; col <= range.e.c; col++) {
-                const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-                const cell = worksheet[cellAddress];
-                rowData.push(cell ? cell.v : null); // Agregar valor o null si la celda está vacía
-            }
-            jsonData.push(rowData);
-        }
-
-        // Asegurar que la primera fila se use como encabezado (incluso si está vacía)
-        const headers = jsonData[0];
-        const bitacoraData = jsonData.slice(1).map((row) => {
+        // Mapear los datos, asegurándonos de convertir las fechas correctamente
+        const binData = jsonData.slice(1).map((row) => {
             return {
-                NumeroParte: row[0] || null, // Asegurar que siempre se lea la columna A
-                FolioMarbete: row[1] || null, // Columna B
-                StorageBin: row[2] || null, // Columna C
-                StorageType: row[3] || null, // Columna D
-                Area: row[4] || null // Columna E
+                StBin: row[0],
+                StType: row[1]
             };
         });
 
         // Enviar los datos al backend
-        const response = await fetch('dao/daoInsertarBitacora.php', {
+        const response = await fetch('dao/daoInsertarBin.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ bitacoraDatos: bitacoraData })
+            body: JSON.stringify({ binDatos: binData })
         });
 
         // Obtener la respuesta del backend
@@ -731,10 +720,10 @@ async function insertarExcelBitacora(file) {
                 text: result.message
             });
 
-            cargarDatosBitacora();
+            cargarDatosBin();
         } else {
             // Mostrar el mensaje de error que viene del backend
-            throw new Error(result.message + ' Detalles: ' + result.detalles);
+            throw new Error(result.message );
         }
 
     } catch (error) {
@@ -745,7 +734,6 @@ async function insertarExcelBitacora(file) {
         });
     }
 }
-
 
 
 /**********************************************************************************************************************/
