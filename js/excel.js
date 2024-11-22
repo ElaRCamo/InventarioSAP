@@ -44,7 +44,7 @@ function mostrarImagenTooltip(idTooltip, imageUrl, width, height) {
 
 
 /**********************************************************************************************************************/
-/********************************************************TABLA BITACORA***********************************************/
+/**************************************************TABLA BITACORA******************************************************/
 /**********************************************************************************************************************/
 
 function cargarDatosBitacora() {
@@ -159,129 +159,8 @@ async function insertarExcelBitacora(file) {
     }
 }
 
-
-/*
-async function insertarExcelBitacora(file) {
-    try {
-        // Leer el archivo Excel
-        const data = await file.arrayBuffer();
-        const workbook = XLSX.read(data, { type: 'array' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
-        // Obtener el rango del Excel (siempre incluyendo columnas hasta la "E")
-        const range = XLSX.utils.decode_range(worksheet['!ref']);
-
-        const jsonData = [];
-
-        // Recorrer fila por fila, asegurándose de incluir todas las columnas (A, B, C, D, E)
-        for (let row = range.s.r; row <= range.e.r; row++) {
-            const rowData = {
-                NumeroParte: worksheet[`A${row + 1}`]?.v || "", // Columna A
-                FolioMarbete: worksheet[`B${row + 1}`]?.v || "", // Columna B
-                StorageBin: worksheet[`C${row + 1}`]?.v || "", // Columna C
-                StorageType: worksheet[`D${row + 1}`]?.v || "", // Columna D
-                Area: worksheet[`E${row + 1}`]?.v || "" // Columna E
-            };
-            jsonData.push(rowData);
-        }
-
-        // Remover la primera fila de encabezados
-        const bitacoraData = jsonData.slice(1);
-
-        // Validar que haya datos para enviar
-        if (bitacoraData.length === 0) {
-            throw new Error("El archivo Excel no contiene datos válidos para procesar.");
-        }
-
-        // Enviar los datos al backend
-        const response = await fetch('dao/daoInsertarBitacora.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ bitacoraDatos: bitacoraData })
-        });
-
-        // Obtener la respuesta del backend
-        const result = await response.json();
-
-        if (result.status === "success") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Actualización exitosa',
-                text: result.message
-            });
-
-            cargarDatosBitacora();
-        } else {
-            throw new Error(result.message + ' Detalles: ' + result.detalles);
-        }
-    } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: error.message || 'Ocurrió un error al procesar el archivo. Recargue la página e intente nuevamente.'
-        });
-    }
-}
-
-
-async function insertarExcelBitacora(file) {
-    try {
-        // Leer el archivo Excel
-        const data = await file.arrayBuffer();
-        const workbook = XLSX.read(data, { type: 'array' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-        // Mapear los datos, asegurándonos de convertir las fechas correctamente
-        const bitacoraData = jsonData.slice(1).map((row) => {
-            return {
-                NumeroParte: row[0],
-                FolioMarbete: row[1],
-                StorageBin: row[2],
-                StorageType: row [3],
-                Area: row [4]
-            };
-        });
-
-        // Enviar los datos al backend
-        const response = await fetch('dao/daoInsertarBitacora.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ bitacoraDatos: bitacoraData })
-        });
-
-        // Obtener la respuesta del backend
-        const result = await response.json();
-
-        if (result.status === "success") {
-            Swal.fire({
-                icon: 'success',
-                title: 'Actualización exitosa',
-                text: result.message
-            });
-
-            cargarDatosBitacora();
-        } else {
-            // Mostrar el mensaje de error que viene del backend
-            throw new Error(result.message + ' Detalles: ' + result.detalles);
-        }
-
-    } catch (error) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: error.message || 'Ocurrió un error al procesar el archivo. Recargue la página e intente nuevamente.'
-        });
-    }
-}
-
-*/
 /**********************************************************************************************************************/
-/********************************************************TABLA AREA***************************************************/
+/********************************************************TABLA AREA****************************************************/
 /**********************************************************************************************************************/
 function cargarDatosArea() {
     fetch('dao/daoConsultarArea.php')
@@ -483,27 +362,33 @@ function cargarDatosStorage() {
     fetch('dao/daoConsultarStorage.php')
         .then(response => response.json())
         .then(data => {
+            console.log('Datos recibidos:', data); // Mensaje de depuración para ver los datos completos
+
             const tableBody = document.getElementById('bodyPStorage');
             tableBody.innerHTML = ''; // Limpiar el contenido anterior
 
             // Verificar si hay datos en "data"
             if (data && data.data) {
+                console.log('Datos disponibles en "data.data":', data.data); // Verifica si hay datos en data.data
                 data.data.forEach(storage => {
+                    console.log('Procesando storage:', storage); // Verifica cada elemento procesado
+
                     const row = document.createElement('tr');
 
                     // Crear celdas para cada columna
                     row.innerHTML = `
-                            <td>${storage.id_StorageUnit}</td>
-                            <td>${storage.Numero_Parte}</td>
-                            <td>${storage.Cantidad}</td>
-                            <td>${storage.Storage_Bin}</td>
-                            <td>${storage.Storage_Type}</td>
-                        `;
+                        <td>${storage.id_StorageUnit}</td>
+                        <td>${storage.Numero_Parte}</td>
+                        <td>${storage.Cantidad}</td>
+                        <td>${storage.Storage_Bin}</td>
+                        <td>${storage.Storage_Type}</td>
+                    `;
 
                     // Agregar la fila a la tabla
                     tableBody.appendChild(row);
                 });
             } else {
+                console.log('No hay datos disponibles'); // Mensaje de depuración cuando no hay datos
                 // Si no hay datos, mostrar un mensaje en la tabla
                 const row = document.createElement('tr');
                 row.innerHTML = '<td colspan="5" class="text-center">No hay datos disponibles</td>';
@@ -511,9 +396,10 @@ function cargarDatosStorage() {
             }
         })
         .catch(error => {
-            console.error('Error al cargar los datos:', error);
+            console.error('Error al cargar los datos:', error); // Captura y muestra el error en consola
         });
 }
+
 /******************Cargar e insertar datos de Excel*******************/
 document.getElementById('btnExcelStorage').addEventListener('click', () => {
     document.getElementById('fileInputStorage').click();
