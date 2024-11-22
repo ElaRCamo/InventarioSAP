@@ -92,7 +92,7 @@ function insertarRegistrosBitacora($NumeroParte, $FolioMarbete, $StorageBin, $St
 
         } else {
             // Si no existe, insertar el nuevo registro
-            $insertParte = $conex->prepare("INSERT INTO `Parte` (`NumeroParte`, `StorageBin`, `StorageType`, `Area`, `Fecha`, `FolioMarbete`) 
+            $insertParte = $conex->prepare("INSERT INTO `Bitacora_Inventario` (`NumeroParte`, `StorageBin`, `StorageType`, `Area`, `Fecha`, `FolioMarbete`) 
                                             VALUES (?, ?, ?, ?, ?, ?)");
             $insertParte->bind_param("ssssss", $NumeroParte, $StorageBin, $StorageType, $Area, $fechaHoy, $FolioMarbete);
 
