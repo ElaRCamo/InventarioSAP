@@ -101,6 +101,67 @@ document.getElementById('fileInputBitacora').addEventListener('change', (event) 
         insertarExcelBitacora(file);
     }
 });
+
+async function insertarExcelBitacora(file) {
+    try {
+        // Leer el archivo Excel
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+        // Configurar para incluir celdas vacías
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+            header: 1, // Leer todas las filas y columnas, incluyendo encabezados
+            defval: null // Asegurar que las celdas vacías tengan un valor nulo
+        });
+
+        // Mapear los datos, incluyendo columnas vacías
+        const bitacoraData = jsonData.slice(1).map((row) => {
+            return {
+                NumeroParte: row[0] || null, // Asegurar que siempre se lea la columna A
+                FolioMarbete: row[1] || null, // Columna B
+                StorageBin: row[2] || null, // Columna C
+                StorageType: row[3] || null, // Columna D
+                Area: row[4] || null // Columna E
+            };
+        });
+
+        // Enviar los datos al backend
+        const response = await fetch('dao/daoInsertarBitacora.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ bitacoraDatos: bitacoraData })
+        });
+
+        // Obtener la respuesta del backend
+        const result = await response.json();
+
+        if (result.status === "success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualización exitosa',
+                text: result.message
+            });
+
+            cargarDatosBitacora();
+        } else {
+            // Mostrar el mensaje de error que viene del backend
+            throw new Error(result.message + ' Detalles: ' + result.detalles);
+        }
+
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Ocurrió un error al procesar el archivo. Recargue la página e intente nuevamente.'
+        });
+    }
+}
+
+
+/*
 async function insertarExcelBitacora(file) {
     try {
         // Leer el archivo Excel
@@ -154,7 +215,7 @@ async function insertarExcelBitacora(file) {
     }
 }
 
-
+*/
 /**********************************************************************************************************************/
 /********************************************************TABLA AREA***************************************************/
 /**********************************************************************************************************************/
