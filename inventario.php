@@ -234,7 +234,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         //cargarDatosParte();
         //cargarDatosBin();
-        cargarDatosStorage();
+        //cargarDatosStorage();
 
     });
 
@@ -243,7 +243,7 @@
             "tooltipBitacora",
             "https://grammermx.com/excelInventario/imgs/bitacora.png",
             320,
-            150
+            140
         );
     });
 
@@ -252,7 +252,7 @@
             "tooltipStorage",
             "https://grammermx.com/excelInventario/imgs/storage.png",
             320,
-            120
+            100
         );
     });
 
@@ -278,7 +278,7 @@
         mostrarImagenTooltip(
             "tooltiInventario",
             "https://grammermx.com/excelInventario/imgs/inventarioSap.png",
-            320,
+            310,
             120
         );
     });
@@ -287,7 +287,7 @@
         mostrarImagenTooltip(
             "tooltiBin",
             "https://grammermx.com/excelInventario/imgs/bin.png",
-            320,
+            250,
             120
         );
     });
