@@ -27,3 +27,83 @@
 .tippy-box[data-theme~='light'] > .tippy-svg-arrow > svg:last-child {
     fill: #f1f4f9;
 }
+
+h2{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 30px;
+    letter-spacing: 0.5px;
+    word-spacing: 0px;
+    color: #2d67a4;
+    font-weight: bold;
+    text-decoration: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: uppercase;
+}
+
+/* Estilos para la tabla */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Elimina los bordes dobles entre celdas */
+    margin-top: 20px;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Estilos para el encabezado de la tabla */
+thead {
+    background-color: #1E2A3A; /* Color oscuro para un look moderno */
+    color: white;
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+thead th {
+    padding: 12px 15px;
+    text-align: left; /* Alineación a la izquierda para claridad */
+    border-bottom: 2px solid #444; /* Línea sutil debajo del encabezado */
+}
+
+/* Estilo para las celdas del cuerpo de la tabla */
+tbody tr:nth-child(even) {
+    background-color: #f4f6f9; /* Fila alterna en gris claro */
+}
+
+tbody tr:hover {
+    background-color: #e0e0e0; /* Resalta la fila cuando se pasa el ratón */
+    cursor: pointer; /* Cambia el cursor a una mano */
+}
+
+/* Estilo para las celdas de la tabla */
+td {
+    padding: 10px 15px;
+    text-align: left;
+    font-size: 14px;
+    color: #333; /* Color gris oscuro para el texto */
+}
+
+/* Bordes y sombreados */
+table, th, td {
+    border: 1px solid #ddd; /* Bordes sutiles */
+}
+
+table th, table td {
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+table {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Estilo para los encabezados cuando se aplica scroll */
+thead th {
+    position: sticky;
+    top: 0;
+    background-color: #2A3C4D; /* Mantén el fondo oscuro */
+    z-index: 1; /* Mantén los encabezados encima del contenido al hacer scroll */
+}
+
+/* Efecto de transición */
+tbody tr {
+    transition: background-color 0.3s ease;
+}
