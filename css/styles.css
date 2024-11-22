@@ -52,7 +52,7 @@ table {
 /* Estilos para el encabezado de la tabla */
 thead {
     background-color: #062863 !important; /* Color oscuro para un look moderno */
-    color: white;
+
     text-transform: uppercase;
     font-size: 14px;
     letter-spacing: 1px;
@@ -64,42 +64,10 @@ thead th {
     border-bottom: 2px solid #0d1025; /* Línea sutil debajo del encabezado */
 }
 
-/* Estilo para las celdas del cuerpo de la tabla */
-tbody tr:nth-child(even) {
-    background-color: #f4f6f9; /* Fila alterna en gris claro */
-}
-
-tbody tr:hover {
-    background-color: #e0e0e0; /* Resalta la fila cuando se pasa el ratón */
-    cursor: pointer; /* Cambia el cursor a una mano */
-}
-
-/* Estilo para las celdas de la tabla */
-td {
-    padding: 10px 15px;
-    text-align: left;
-    font-size: 14px;
-    color: #333; /* Color gris oscuro para el texto */
-}
-
-/* Bordes y sombreados */
-table, th, td {
-    border: 1px solid #ddd; /* Bordes sutiles */
-}
-
-table {
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
-}
-
 /* Estilo para los encabezados cuando se aplica scroll */
 thead th {
     position: sticky;
     top: 0;
     background-color: #404f90; /* Mantén el fondo oscuro */
     z-index: 1; /* Mantén los encabezados encima del contenido al hacer scroll */
-}
-
-/* Efecto de transición */
-tbody tr {
-    transition: background-color 0.3s ease;
 }
