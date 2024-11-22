@@ -676,29 +676,49 @@ document.getElementById('fileInputBin').addEventListener('change', (event) => {
         insertarExcelBin(file);
     }
 });
-async function insertarExcelBin(file) {
+
+
+async function insertarExcelBitacora(file) {
     try {
         // Leer el archivo Excel
         const data = await file.arrayBuffer();
         const workbook = XLSX.read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
 
-        // Mapear los datos, asegurándonos de convertir las fechas correctamente
-        const binData = jsonData.slice(1).map((row) => {
+        // Obtener el rango de celdas
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+        const jsonData = [];
+
+        // Iterar sobre todas las filas y columnas del rango
+        for (let row = range.s.r; row <= range.e.r; row++) {
+            const rowData = [];
+            for (let col = range.s.c; col <= range.e.c; col++) {
+                const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+                const cell = worksheet[cellAddress];
+                rowData.push(cell ? cell.v : null); // Agregar valor o null si la celda está vacía
+            }
+            jsonData.push(rowData);
+        }
+
+        // Asegurar que la primera fila se use como encabezado (incluso si está vacía)
+        const headers = jsonData[0];
+        const bitacoraData = jsonData.slice(1).map((row) => {
             return {
-                StBin: row[0],
-                StType: row[1]
+                NumeroParte: row[0] || null, // Asegurar que siempre se lea la columna A
+                FolioMarbete: row[1] || null, // Columna B
+                StorageBin: row[2] || null, // Columna C
+                StorageType: row[3] || null, // Columna D
+                Area: row[4] || null // Columna E
             };
         });
 
         // Enviar los datos al backend
-        const response = await fetch('dao/daoInsertarBin.php', {
+        const response = await fetch('dao/daoInsertarBitacora.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ binDatos: binData })
+            body: JSON.stringify({ bitacoraDatos: bitacoraData })
         });
 
         // Obtener la respuesta del backend
@@ -711,10 +731,10 @@ async function insertarExcelBin(file) {
                 text: result.message
             });
 
-            cargarDatosBin();
+            cargarDatosBitacora();
         } else {
             // Mostrar el mensaje de error que viene del backend
-            throw new Error(result.message );
+            throw new Error(result.message + ' Detalles: ' + result.detalles);
         }
 
     } catch (error) {
@@ -725,6 +745,7 @@ async function insertarExcelBin(file) {
         });
     }
 }
+
 
 
 /**********************************************************************************************************************/

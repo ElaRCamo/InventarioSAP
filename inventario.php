@@ -103,7 +103,7 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Area</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelArea"> Cargar Excel Areas</button>
+                    <button class="btn btn-success text-right btnExcel" id="btnExcelArea"> Cargar Excel Areas</button>
                     <input type="file" id="fileInputArea" accept=".xlsx, .xls" style="display: none;" />
                     <button class="btn btn-secondary text-right btnExcel" id="tooltipArea"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
 
@@ -130,7 +130,7 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Ubicaciones</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelUbicaciones"> Cargar Excel Ubicaciones</button>
+                    <button class="btn btn-success text-right btnExcel" id="btnExcelUbicaciones"> Cargar Excel Ubicaciones</button>
                     <input type="file" id="fileInputUbicaciones" accept=".xlsx, .xls" style="display: none;" />
                     <button class="btn btn-secondary text-right btnExcel" id="tooltipUbicaciones"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
 
@@ -154,8 +154,10 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Inventario</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelInventario"> Cargar Excel Inventario</button>
+                    <button class="btn btn-success text-right btnExcel" id="btnExcelInventario"> Cargar Excel Inventario</button>
                     <input type="file" id="fileInputInventario" accept=".xlsx, .xls" style="display: none;" />
+                    <button class="btn btn-secondary text-right btnExcel" id="tooltiInventario"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
+
                     <table class="table table-striped table-bordered mt-3" id="tablaInventario">
                         <thead>
                         <tr>
@@ -180,8 +182,10 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Bin</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelBin"> Cargar Excel Bin</button>
+                    <button class="btn btn-success text-right btnExcel" id="btnExcelBin"> Cargar Excel Bin</button>
                     <input type="file" id="fileInputBin" accept=".xlsx, .xls" style="display: none;" />
+                    <button class="btn btn-secondary text-right btnExcel" id="tooltiBin"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
+
                     <table class="table table-striped table-bordered mt-3" id="tablaBin">
                         <thead>
                         <tr>
@@ -202,8 +206,10 @@
             <div class="row">
                 <div class="container mt-5">
                     <h2 class="text-center">Tabla Parte</h2>
-                    <button class="btn btn-secondary text-right btnExcel" id="btnExcelParte"> Cargar Excel Parte</button>
+                    <button class="btn btn-success text-right btnExcel" id="btnExcelParte"> Cargar Excel Parte</button>
                     <input type="file" id="fileInputParte" accept=".xlsx, .xls" style="display: none;" />
+                    <button class="btn btn-secondary text-right btnExcel" id="tooltiParte"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
+
                     <table class="table table-striped table-bordered mt-3" id="tablaParte">
                         <thead>
                         <tr>
@@ -266,6 +272,32 @@
         );
     });
 
+    document.getElementById("tooltiInventario").addEventListener("click", function() {
+        mostrarImagenTooltip(
+            "tooltiInventario",
+            "https://grammermx.com/excelInventario/imgs/inventario.png",
+            320,
+            120
+        );
+    });
+
+    document.getElementById("tooltiBin").addEventListener("click", function() {
+        mostrarImagenTooltip(
+            "tooltiBin",
+            "https://grammermx.com/excelInventario/imgs/bin.png",
+            320,
+            120
+        );
+    });
+
+    document.getElementById("tooltiParte").addEventListener("click", function() {
+        mostrarImagenTooltip(
+            "tooltiParte",
+            "https://grammermx.com/excelInventario/imgs/parte.png",
+            320,
+            120
+        );
+    });
 </script>
 
 <!-- -Archivos de jQuery-->
