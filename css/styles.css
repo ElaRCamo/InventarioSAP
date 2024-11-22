@@ -41,14 +41,6 @@ h2{
     text-transform: uppercase;
 }
 
-/* Estilos para la tabla */
-table {
-    width: 100%;
-    border-collapse: collapse; /* Elimina los bordes dobles entre celdas */
-    margin-top: 20px;
-    font-family: 'Arial', sans-serif;
-}
-
 /* Estilos para el encabezado de la tabla */
 thead {
     background-color: #062863 !important; /* Color oscuro para un look moderno */
