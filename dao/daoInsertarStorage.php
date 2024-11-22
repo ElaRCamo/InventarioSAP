@@ -75,7 +75,6 @@ function insertarRegistrosStorage($id_StorageUnit, $Numero_Parte, $Cantidad, $St
                 $conex->commit();
                 $respuesta = array('status' => 'success', 'message' => 'Registro actualizado correctamente.');
             }
-
             $updateParte->close();
 
         } else {
@@ -93,10 +92,8 @@ function insertarRegistrosStorage($id_StorageUnit, $Numero_Parte, $Cantidad, $St
                 $conex->commit();
                 $respuesta = array('status' => 'success', 'message' => 'Registro insertado correctamente.');
             }
-
             $insertParte->close();
         }
-
         $consultaExistente->close();
 
     } catch (Exception $e) {

@@ -42,8 +42,6 @@
                     <button class="btn btn-primary text-right btnExcel" id="btnTxtBitacora"> Actualizar txt </button>
                     <input type="file" id="fileInputTxt" accept=".txt" style="display: none;" />
 
-                    <i class="far fa-question-circle position-absolute"></i>
-
                     <table class="table table-striped table-bordered mt-3" id="tablaBitacora">
                         <thead>
                         <tr>
@@ -107,6 +105,8 @@
                     <h2 class="text-center">Tabla Area</h2>
                     <button class="btn btn-secondary text-right btnExcel" id="btnExcelArea"> Cargar Excel Areas</button>
                     <input type="file" id="fileInputArea" accept=".xlsx, .xls" style="display: none;" />
+                    <button class="btn btn-secondary text-right btnExcel" id="tooltipArea"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
+
                     <table class="table table-striped table-bordered mt-3" id="tablaArea">
                         <thead>
                         <tr>
@@ -132,6 +132,8 @@
                     <h2 class="text-center">Tabla Ubicaciones</h2>
                     <button class="btn btn-secondary text-right btnExcel" id="btnExcelUbicaciones"> Cargar Excel Ubicaciones</button>
                     <input type="file" id="fileInputUbicaciones" accept=".xlsx, .xls" style="display: none;" />
+                    <button class="btn btn-secondary text-right btnExcel" id="tooltipUbicaciones"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
+
                     <table class="table table-striped table-bordered mt-3" id="tablaUbicaciones">
                         <thead>
                         <tr>
@@ -246,6 +248,23 @@
         );
     });
 
+    document.getElementById("tooltipArea").addEventListener("click", function() {
+        mostrarImagenTooltip(
+            "tooltipArea",
+            "https://grammermx.com/excelInventario/imgs/area.png",
+            320,
+            120
+        );
+    });
+
+    document.getElementById("tooltipUbicaciones").addEventListener("click", function() {
+        mostrarImagenTooltip(
+            "tooltipUbicaciones",
+            "https://grammermx.com/excelInventario/imgs/area.png",
+            320,
+            120
+        );
+    });
 
 </script>
 
