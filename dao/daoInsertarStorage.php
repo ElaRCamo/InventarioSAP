@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Respuesta final si todos fueron exitosos
         if ($todosExitosos) {
-            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Parte fueron actualizados correctamente.");
+            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Storage_Unit fueron actualizados correctamente.");
         } else {
             $respuesta = array("status" => 'error', "message" => "Se encontraron errores al insertar los registros.", "detalles" => $errores);
         }
@@ -64,9 +64,9 @@ function insertarRegistrosStorage($id_StorageUnit, $Numero_Parte, $Cantidad, $St
 
         if ($consultaExistente->num_rows > 0) {
             // Si ya existe, se actualiza el registro
-            $updateParte = $conex->prepare("UPDATE `Storage_Unit` SET `Numero_Parte` = ?, `Cantidad` = ?, `Storage_Bin` = ?, `Storage_Type` = ? WHERE `id_StorageUnit` = ?");
-            $updateParte->bind_param("ssssi", $Numero_Parte, $Cantidad, $Storage_Bin, $Storage_Type, $id_StorageUnit);
-            $resultado = $updateParte->execute();
+            $updateStorage = $conex->prepare("UPDATE `Storage_Unit` SET `Numero_Parte` = ?, `Cantidad` = ?, `Storage_Bin` = ?, `Storage_Type` = ? WHERE `id_StorageUnit` = ?");
+            $updateStorage->bind_param("ssssi", $Numero_Parte, $Cantidad, $Storage_Bin, $Storage_Type, $id_StorageUnit);
+            $resultado = $updateStorage->execute();
 
             if (!$resultado) {
                 $conex->rollback();
@@ -75,15 +75,15 @@ function insertarRegistrosStorage($id_StorageUnit, $Numero_Parte, $Cantidad, $St
                 $conex->commit();
                 $respuesta = array('status' => 'success', 'message' => 'Registro actualizado correctamente.');
             }
-            $updateParte->close();
+            $updateStorage->close();
 
         } else {
             // Si no existe, insertar el nuevo registro
-            $insertParte = $conex->prepare("INSERT INTO `Storage_Unit` (`id_StorageUnit`,`Numero_Parte`, `Cantidad`, `Storage_Bin`, `Storage_Type`) 
+            $insertStorage = $conex->prepare("INSERT INTO `Storage_Unit` (`id_StorageUnit`,`Numero_Parte`, `Cantidad`, `Storage_Bin`, `Storage_Type`) 
                                             VALUES (?, ?, ?, ?, ?)");
-            $insertParte->bind_param("issss", $id_StorageUnit, $Numero_Parte, $Cantidad, $Storage_Bin, $Storage_Type);
+            $insertStorage->bind_param("issss", $id_StorageUnit, $Numero_Parte, $Cantidad, $Storage_Bin, $Storage_Type);
 
-            $resultado = $insertParte->execute();
+            $resultado = $insertStorage->execute();
 
             if (!$resultado) {
                 $conex->rollback();
@@ -92,7 +92,7 @@ function insertarRegistrosStorage($id_StorageUnit, $Numero_Parte, $Cantidad, $St
                 $conex->commit();
                 $respuesta = array('status' => 'success', 'message' => 'Registro insertado correctamente.');
             }
-            $insertParte->close();
+            $insertStorage->close();
         }
         $consultaExistente->close();
 
