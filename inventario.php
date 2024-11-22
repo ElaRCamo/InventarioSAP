@@ -77,6 +77,7 @@
                     <h2 class="text-center">Tabla Storage</h2>
                     <button class="btn btn-secondary text-right btnExcel" id="btnExcelStorage"> Cargar Excel Storage</button>
                     <input type="file" id="fileInputStorage" accept=".xlsx, .xls" style="display: none;" />
+                    <button class="btn btn-secondary text-right btnExcel" id="tooltipStorage"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
 
                     <button class="btn btn-secondary text-right btnExcel" id="btnTxtStorage"> Actualizar txt </button>
                     <input type="file" id="fileInputTxtS" accept=".txt" style="display: none;" />
@@ -233,6 +234,15 @@
             "https://grammermx.com/excelInventario/imgs/bitacora.png",
             320,
             150
+        );
+    });
+
+    document.getElementById("tooltipStorage").addEventListener("click", function() {
+        mostrarImagenTooltip(
+            "tooltipBitacora",
+            "https://grammermx.com/excelInventario/imgs/storage.png",
+            320,
+            120
         );
     });
 
