@@ -109,6 +109,71 @@ async function insertarExcelBitacora(file) {
         const workbook = XLSX.read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
+        // Obtener el rango del Excel
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+
+        const jsonData = [];
+
+        // Recorrer fila por fila, asegurándose de incluir todas las columnas (A, B, C, D, E)
+        for (let row = range.s.r; row <= range.e.r; row++) {
+            const rowData = {
+                NumeroParte: worksheet[`A${row + 1}`]?.v || "", // Columna A
+                FolioMarbete: worksheet[`B${row + 1}`]?.v || "", // Columna B
+                StorageBin: worksheet[`C${row + 1}`]?.v || "", // Columna C
+                StorageType: worksheet[`D${row + 1}`]?.v || "", // Columna D
+                Area: worksheet[`E${row + 1}`]?.v || "" // Columna E
+            };
+            jsonData.push(rowData);
+        }
+
+        // Remover siempre la primera fila (aunque esté vacía) como encabezados
+        const bitacoraData = jsonData.slice(1);
+
+        // Validar que haya datos para enviar
+        if (bitacoraData.length === 0) {
+            throw new Error("El archivo Excel no contiene datos válidos para procesar.");
+        }
+
+        // Enviar los datos al backend
+        const response = await fetch('dao/daoInsertarBitacora.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ bitacoraDatos: bitacoraData })
+        });
+
+        // Obtener la respuesta del backend
+        const result = await response.json();
+
+        if (result.status === "success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualización exitosa',
+                text: result.message
+            });
+
+            cargarDatosBitacora();
+        } else {
+            throw new Error(result.message + ' Detalles: ' + result.detalles);
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Ocurrió un error al procesar el archivo. Recargue la página e intente nuevamente.'
+        });
+    }
+}
+
+/*
+async function insertarExcelBitacora(file) {
+    try {
+        // Leer el archivo Excel
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
         // Obtener el rango del Excel (siempre incluyendo columnas hasta la "E")
         const range = XLSX.utils.decode_range(worksheet['!ref']);
 
@@ -166,7 +231,7 @@ async function insertarExcelBitacora(file) {
     }
 }
 
-/*
+
 async function insertarExcelBitacora(file) {
     try {
         // Leer el archivo Excel
