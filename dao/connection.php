@@ -5,13 +5,14 @@ class LocalConector{
     private $usuario = "u909553968_UserInventario";
     private $clave = "Grammer2024Inventario";
     private $db = "u909553968_Inventario";
+    private $conexion;
 
     public function conectar(){
-        $conexion = mysqli_connect($this->host, $this->usuario, $this->clave, $this->db);
-        if ($conexion->connect_error) {
-            die("Error de conexión: " . $conexion->connect_error);
+        $this->conexion = mysqli_connect($this->host, $this->usuario, $this->clave, $this->db);
+        if ($this->conexion->connect_error) {
+            die("Error de conexión: " . $this->conexion->connect_error);
         }
-        //echo "conexion exitosa";
-        return $conexion;
+        echo "conexion exitosa";
+        return $this->conexion;
     }
 }
