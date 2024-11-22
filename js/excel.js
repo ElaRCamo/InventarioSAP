@@ -112,26 +112,19 @@ async function insertarExcelBitacora(file) {
         // Obtener el rango del Excel
         const range = XLSX.utils.decode_range(worksheet['!ref']);
 
-        const jsonData = [];
+        // Crear un array para almacenar los datos
+        const bitacoraData = [];
 
         // Recorrer fila por fila, asegurándose de incluir todas las columnas (A, B, C, D, E)
         for (let row = range.s.r; row <= range.e.r; row++) {
-            const rowData = {
+            const registro = {
                 NumeroParte: worksheet[`A${row + 1}`]?.v || "", // Columna A
                 FolioMarbete: worksheet[`B${row + 1}`]?.v || "", // Columna B
                 StorageBin: worksheet[`C${row + 1}`]?.v || "", // Columna C
                 StorageType: worksheet[`D${row + 1}`]?.v || "", // Columna D
                 Area: worksheet[`E${row + 1}`]?.v || "" // Columna E
             };
-            jsonData.push(rowData);
-        }
-
-        // Remover siempre la primera fila (aunque esté vacía) como encabezados
-        const bitacoraData = jsonData.slice(1);
-
-        // Validar que haya datos para enviar
-        if (bitacoraData.length === 0) {
-            throw new Error("El archivo Excel no contiene datos válidos para procesar.");
+            bitacoraData.push(registro);
         }
 
         // Enviar los datos al backend
@@ -165,6 +158,7 @@ async function insertarExcelBitacora(file) {
         });
     }
 }
+
 
 /*
 async function insertarExcelBitacora(file) {
