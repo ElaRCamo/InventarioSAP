@@ -234,7 +234,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         //cargarDatosParte();
         //cargarDatosBin();
-        //cargarDatosStorage();
+        cargarDatosStorage();
 
     });
 
