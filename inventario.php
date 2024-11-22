@@ -239,7 +239,7 @@
 
     document.getElementById("tooltipStorage").addEventListener("click", function() {
         mostrarImagenTooltip(
-            "tooltipBitacora",
+            "tooltipStorage",
             "https://grammermx.com/excelInventario/imgs/storage.png",
             320,
             120
