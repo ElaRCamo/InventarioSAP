@@ -1,5 +1,4 @@
 <?php
-include_once('connection.php');
 require_once ('funcionesInvenStorage.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

@@ -1,5 +1,5 @@
 <?php
-
+include_once('connection.php');
 function insertarRegistrosStorage($id_StorageUnit, $Numero_Parte, $Cantidad, $Storage_Bin, $Storage_Type) {
     $con = new LocalConector();
     $conex = $con->conectar();
