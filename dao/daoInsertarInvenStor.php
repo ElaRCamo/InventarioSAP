@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $todosExitosos = true;
         $errores = [];
 
-        foreach ($inputData['inventarioDatos'] as $registroInventario) {
+        foreach ($inputData['invenStorDatos'] as $registroInventario) {
             // Validar y asignar valores
             $STLocation = isset($registroInventario['STLocation']) ? trim($registroInventario['STLocation']) : null;
             $StBin = isset($registroInventario['STBin']) ? trim($registroInventario['STBin']) : null;

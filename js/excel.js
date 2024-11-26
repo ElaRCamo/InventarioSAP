@@ -57,10 +57,12 @@ async function insertarExcelInvenStor(file) {
                 icon: 'success',
                 title: 'Actualización exitosa',
                 text: result.message
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    cargarDatosInventario();
+                    cargarDatosStorage();
+                }
             });
-
-            cargarDatosInventario();
-            cargarDatosStorage();
         } else {
             throw new Error(result.message + ' Detalles: ' + result.detalles);
         }
