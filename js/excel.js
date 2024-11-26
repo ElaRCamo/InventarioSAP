@@ -3,7 +3,7 @@
 /**********************************************************************************************************************/
 
 document.getElementById('btnExcelInvenStor').addEventListener('click', () => {
-    document.getElementById('fileInputBitacora').click();
+    document.getElementById('fileInputInvenStor').click();
 });
 
 document.getElementById('fileInputInvenStor').addEventListener('change', (event) => {
