@@ -1,7 +1,6 @@
 <?php
 include_once('connection.php');
-require_once ('daoInsertarStorage.php');
-require_once ('daoConsultarInventario.php');
+require_once ('funcionesInvenStorage.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Decodificar el cuerpo JSON
@@ -49,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Respuesta final si todos fueron exitosos
         if ($todosExitosos) {
-            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla InventarioSAP fueron actualizados correctamente.");
+            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla InventarioSAP y Storage Unit fueron actualizados correctamente.");
         } else {
             $respuesta = array("status" => 'error', "message" => "Se encontraron errores al insertar los registros.", "detalles" => $errores);
         }

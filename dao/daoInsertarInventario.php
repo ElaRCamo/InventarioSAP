@@ -1,5 +1,6 @@
 <?php
 include_once('connection.php');
+require_once ('funcionesInvenStorage.php');
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Decodificar el cuerpo JSON
@@ -48,74 +49,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 echo json_encode($respuesta);
 
-
-function insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $Cantidad, $AreaCve) {
-    $con = new LocalConector();
-    $conex = $con->conectar();
-
-    // Iniciar transacción
-    $conex->begin_transaction();
-
-    if($StBin === null){
-        $StBin = "";
-    }
-
-    if($StType === null){
-        $StType = "";
-    }
-
-    try {
-        // Consultar si el registro ya existe
-        $consultaExistente = $conex->prepare("SELECT * FROM `InventarioSap` WHERE `GrammerNo` = ? AND StBin = ? AND StType = ? AND STLocation = ?");
-        $consultaExistente->bind_param("sssi", $GrammerNo,$StBin, $StType, $STLocation);
-        $consultaExistente->execute();
-        $consultaExistente->store_result();
-
-        if ($consultaExistente->num_rows > 0) {
-            // Si ya existe, se actualiza el registro
-            $updateInventario = $conex->prepare("UPDATE `InventarioSap` SET `Cantidad` = ?, `AreaCve` = ? WHERE `GrammerNo` = ? AND StBin = ? AND StType = ? AND STLocation = ?");
-            $updateInventario->bind_param("sssssi",  $Cantidad, $AreaCve, $GrammerNo, $StBin, $StType, $STLocation);
-            $resultado = $updateInventario->execute();
-
-            if (!$resultado) {
-                $conex->rollback();
-                $respuesta = array('status' => 'error', 'message' => 'Error al actualizar el registro con GrammerNo: ' . $GrammerNo . ', StBin: '. $StBin . ', StType:'. $StType .', STLocation: '.$STLocation);
-            } else {
-                $conex->commit();
-                $respuesta = array('status' => 'success', 'message' => 'Registro actualizado correctamente.');
-            }
-
-            $updateInventario->close();
-
-        } else {
-
-            // Si no existe, insertar el nuevo registro
-            $insertParte = $conex->prepare("INSERT INTO  `InventarioSap` (`STLocation`, `STBin`, `STType`, `GrammerNo`, `Cantidad`, `AreaCve`)
-                                            VALUES (?, ?, ?, ?, ?, ?)");
-            $insertParte->bind_param("isssss", $STLocation, $StBin, $StType, $GrammerNo, $Cantidad, $AreaCve);
-
-            $resultado = $insertParte->execute();
-
-            if (!$resultado) {
-                $conex->rollback();
-                $respuesta = array('status' => 'error', 'message' => 'Error en la BD al insertar el registro con GrammerNo: ' . $GrammerNo. ', StBin: '. $StBin . ', StType:'. $StType .', STLocation: '.$STLocation);
-            } else {
-                $conex->commit();
-                $respuesta = array('status' => 'success', 'message' => 'Registro insertado correctamente.');
-            }
-
-            $insertParte->close();
-        }
-
-        $consultaExistente->close();
-
-    } catch (Exception $e) {
-        $conex->rollback();
-        $respuesta = array("status" => 'error', "message" => $e->getMessage());
-    } finally {
-        $conex->close();
-    }
-
-    return $respuesta;
-}
 ?>
