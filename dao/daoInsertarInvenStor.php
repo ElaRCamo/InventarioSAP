@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $StType = isset($registroInventario['STType']) ? trim($registroInventario['STType']) : null;
             $GrammerNo = isset($registroInventario['GrammerNo']) ? trim($registroInventario['GrammerNo']) : null;
             $Cantidad = isset($registroInventario['Cantidad']) ? trim($registroInventario['Cantidad']) : null;
-            $AreaCve = isset($registroInventario['AreaCve']) ? trim($registroInventario['AreaCve']) : null;
+            $AreaCve = isset($registroInventario['AreaCVe']) ? trim($registroInventario['AreaCVe']) : null;
             $id_StorageUnit = isset($registroInventario['Id_StorageUnit']) ? trim($registroInventario['Id_StorageUnit']) : null;
 
             // Validar que los datos esenciales no sean nulos o vacíos
