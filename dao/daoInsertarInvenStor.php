@@ -26,17 +26,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $todosExitosos = false;
             } else {
                 $errores[] = "id_storage: ".$id_StorageUnit;
-                if ($id_StorageUnit !== null && $id_StorageUnit !== ''){
-                    $respuestaInsert = insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $Cantidad, $AreaCve);
-                }else{
+                if ($id_StorageUnit !== null && $id_StorageUnit !== '') {
                     $respuestaInsert = insertarRegistrosStorage($id_StorageUnit, $GrammerNo, $Cantidad, $StBin, $StType);
+                } else {
+                    $respuestaInsert = insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $Cantidad, $AreaCve);
                 }
 
                 /*$GrammerNo = $Numero_Parte
                  * $StBin = $Storage_Bin
                  * $StType = $Storage_Type
                  * */
-
 
                 if ($respuestaInsert['status'] !== 'success') {
                     $errores[] = "Error al insertar el registro ID: $GrammerNo. " . $respuestaInsert['message'];
