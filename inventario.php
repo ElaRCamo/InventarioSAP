@@ -255,6 +255,15 @@
 
     });
 
+    document.getElementById("tooltiInvenStor").addEventListener("click", function() {
+        mostrarImagenTooltip(
+            "tooltiInvenStor",
+            "https://grammermx.com/excelInventario/imgs/invenStor.png",
+            320,
+            180
+        );
+    });
+
     document.getElementById("tooltipBitacora").addEventListener("click", function() {
         mostrarImagenTooltip(
             "tooltipBitacora",
