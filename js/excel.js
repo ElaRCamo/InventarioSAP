@@ -1,4 +1,79 @@
 /**********************************************************************************************************************/
+/********************************************EXCEL INVENTARIO - STORAGE************************************************/
+/**********************************************************************************************************************/
+
+document.getElementById('btnExcelInvenStor').addEventListener('click', () => {
+    document.getElementById('fileInputBitacora').click();
+});
+
+document.getElementById('fileInputInvenStor').addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        insertarExcelInvenStor(file);
+    }
+});
+
+async function insertarExcelInvenStor(file) {
+    try {
+        // Leer el archivo Excel
+        const data = await file.arrayBuffer();
+        const workbook = XLSX.read(data, { type: 'array' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+        // Obtener el rango del Excel
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+
+        // Crear un array para almacenar los datos
+        const invenStorData = [];
+
+        // Recorrer fila por fila, asegurándose de incluir todas las columnas (A, B, C, D, E, F, G)
+        for (let row = range.s.r; row <= range.e.r; row++) {
+            const registro = {
+                STLocation: worksheet[`A${row + 1}`]?.v || "", // Columna A
+                STBin: worksheet[`B${row + 1}`]?.v || "", // Columna B
+                STType: worksheet[`C${row + 1}`]?.v || "", // Columna C
+                GrammerNo: worksheet[`D${row + 1}`]?.v || "", // Columna D
+                Cantidad: worksheet[`E${row + 1}`]?.v || "", // Columna E
+                AreaCVe: worksheet[`F${row + 1}`]?.v || "",// Columna F
+                Id_StorageUnit: worksheet[`G${row + 1}`]?.v || "" // Columna G
+            };
+            invenStorData.push(registro);
+        }
+
+        // Enviar los datos al backend
+        const response = await fetch('dao/daoInsertarInvenStor.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ invenStorDatos: invenStorData })
+        });
+
+        // Obtener la respuesta del backend
+        const result = await response.json();
+
+        if (result.status === "success") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Actualización exitosa',
+                text: result.message
+            });
+
+            cargarDatosInventario();
+            cargarDatosStorage();
+        } else {
+            throw new Error(result.message + ' Detalles: ' + result.detalles);
+        }
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'Ocurrió un error al procesar el archivo. Recargue la página e intente nuevamente.'
+        });
+    }
+}
+
+/**********************************************************************************************************************/
 /********************************************************TOOLTIPS******************************************************/
 /**********************************************************************************************************************/
 
