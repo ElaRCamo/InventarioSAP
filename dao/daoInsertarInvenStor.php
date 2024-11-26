@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $todosExitosos = false;
             } else {
 
-                if ($id_StorageUnit === null){
+                if ($id_StorageUnit !== null ){
                     $respuestaInsert = insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $Cantidad, $AreaCve);
                 }else{
                     $respuestaInsert = insertarRegistrosStorage($id_StorageUnit, $GrammerNo, $Cantidad, $StBin, $StType);
