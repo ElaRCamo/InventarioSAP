@@ -25,7 +25,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errores[] = "Faltan datos para el registro GrammerNo: $GrammerNo, STLocation: $STLocation, StBin: $StBin, StType: $StType, Cantidad: $Cantidad, AreaCve: $AreaCve ";
                 $todosExitosos = false;
             } else {
-                $errores[] = "id_storage: ".$id_StorageUnit;
+                $errores[] = "id_storage: ".$id_StorageUnit. " - GrammerNo: ".$GrammerNo."\n";
                 if ($id_StorageUnit !== null && $id_StorageUnit !== '') {
                     $respuestaInsert = insertarRegistrosStorage($id_StorageUnit, $GrammerNo, $Cantidad, $StBin, $StType);
                 } else {
