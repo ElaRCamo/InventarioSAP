@@ -193,7 +193,7 @@ async function insertarExcelBitacora(file) {
         const bitacoraData = [];
 
         // Recorrer fila por fila, asegurándose de incluir todas las columnas (A, B, C, D, E)
-        for (let row = range.s.r; row <= range.e.r; row++) {
+        for (let row = range.s.r + 1; row <= range.e.r; row++) {
             const registro = {
                 NumeroParte: worksheet[`A${row + 1}`]?.v || "", // Columna A
                 FolioMarbete: worksheet[`B${row + 1}`]?.v || "", // Columna B

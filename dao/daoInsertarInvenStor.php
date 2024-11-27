@@ -10,8 +10,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $todosExitosos = true;
         $errores = [];
         $combinaciones = []; // Se inicializa para agrupar por GrammerNo, StBin, StType
-        $STLocation = "";
-        $AreaCve = "";
 
 
         foreach ($inputData['invenStorDatos'] as $registroInventario) {
@@ -37,7 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Si existe id_StorageUnit, se agrupan los registros
             if ($id_StorageUnit !== null && $id_StorageUnit !== '') {
                 // Crear clave única para identificar la combinación
-                $key = $GrammerNo . '|' . $StBin . '|' . $StType;
+                $key = $GrammerNo . '|' . $StBin . '|' . $StType . '|' . $STLocation . '|' . $AreaCve;
 
                 // Verificar si la combinación ya existe en el array de combinaciones
                 if (!isset($combinaciones[$key])) {
@@ -45,6 +43,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         'GrammerNo' => $GrammerNo,
                         'StBin' => $StBin,
                         'StType' => $StType,
+                        'AreaCve' => $AreaCve,
+                        'STLocation' => $STLocation,
                         'Cantidad' => 0  // Inicializar la cantidad para la combinación
                     ];
                 }
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 // Verificar respuesta de la inserción en Storage
                 if (!$respuestaInsert) {
-                    $errores[] = "Error al insertar en Storage: GrammerNo: $GrammerNo, StBin: $StBin, StType: $StType, Cantidad: $Cantidad";
+                    $errores[] = "Error al insertar en Storage: GrammerNo: $GrammerNo, StBin: $StBin, StType: $StType, Cantidad: $Cantidad, AreaCve: $AreaCve, STLocation: $STLocation";
                     $todosExitosos = false;
                     continue; // Continuar con el siguiente registro si hubo error
                 }
@@ -79,11 +79,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         foreach ($combinaciones as $data) {
             $respuestaInsert = insertarRegistrosInventario(
                 $data['GrammerNo'],
-                $STLocation,
+                $data['STLocation'],
                 $data['StBin'],
                 $data['StType'],
                 $data['Cantidad'],
-                $AreaCve
+                $data['AreaCve']
             );
 
             // Verificar respuesta de la inserción en Inventario para combinaciones agrupadas
