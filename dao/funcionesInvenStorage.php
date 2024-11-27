@@ -130,8 +130,6 @@ function insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $
 }
 
 
-include_once('connection.php');
-
 function actualizarInventario() {
     $conex = null; // Inicializar la variable para evitar errores en el catch
     try {
