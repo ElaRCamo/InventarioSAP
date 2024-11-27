@@ -25,11 +25,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $errores[] = "Faltan datos para el registro GrammerNo: $GrammerNo, STLocation: $STLocation, StBin: $StBin, StType: $StType, Cantidad: $Cantidad, AreaCve: $AreaCve ";
                 $todosExitosos = false;
             } else {
+                $respuestaInsert = insertarRegistrosStorage($id_StorageUnit, $GrammerNo, $Cantidad, $StBin, $StType);
+                // Declarar $combinaciones fuera del if para que persista entre ejecuciones
+                $combinaciones = [];
+
                 if ($id_StorageUnit !== null && $id_StorageUnit !== '') {
-                    $respuestaInsert = insertarRegistrosStorage($id_StorageUnit, $GrammerNo, $Cantidad, $StBin, $StType);
+                    // Crear clave única para identificar la combinación
+                    $key = $GrammerNo . '|' . $StBin . '|' . $StType;
+
+                    // Verificar si la combinación ya existe
+                    if (!isset($combinaciones[$key])) {
+                        $combinaciones[$key] = [
+                            'GrammerNo' => $GrammerNo,
+                            'StBin' => $StBin,
+                            'StType' => $StType,
+                            'Cantidad' => 0
+                        ];
+                    }
+
+                    // Sumar la cantidad correspondiente
+                    $combinaciones[$key]['Cantidad'] += $Cantidad;
+
+                    // Insertar todas las combinaciones agrupadas
+                    foreach ($combinaciones as $data) {
+                        $respuestaInsert = insertarRegistrosStorage(
+                            $id_StorageUnit,
+                            $data['GrammerNo'],
+                            $data['Cantidad'],
+                            $data['StBin'],
+                            $data['StType']
+                        );
+
+                        // Manejar la respuesta
+                        if (!$respuestaInsert) {
+                            echo "Error al insertar en Storage: " . implode(', ', $data) . "\n";
+                        }
+                    }
                 } else {
                     $respuestaInsert = insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $Cantidad, $AreaCve);
                 }
+
 
                 /*$GrammerNo = $Numero_Parte
                  * $StBin = $Storage_Bin
