@@ -27,7 +27,7 @@ async function insertarExcelInvenStor(file) {
         const invenStorData = [];
 
         // Recorrer fila por fila, asegurándose de incluir todas las columnas (A, B, C, D, E, F, G)
-        for (let row = range.s.r; row <= range.e.r; row++) {
+        for (let row = range.s.r + 1; row <= range.e.r; row++) {
             const registro = {
                 STLocation: worksheet[`A${row + 1}`]?.v || "", // Columna A
                 STBin: worksheet[`B${row + 1}`]?.v || "", // Columna B
