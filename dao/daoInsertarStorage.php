@@ -34,7 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Respuesta final si todos fueron exitosos
         if ($todosExitosos) {
-            $respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Storage_Unit fueron actualizados correctamente.");
+            $respuesta = actualizarInventario();
+            //$respuesta = array("status" => 'success', "message" => "Todos los registros en la Tabla Storage_Unit fueron actualizados correctamente.");
         } else {
             $respuesta = array("status" => 'error', "message" => "Se encontraron errores al insertar los registros.", "detalles" => $errores);
         }
