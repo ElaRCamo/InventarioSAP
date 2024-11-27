@@ -129,4 +129,100 @@ function insertarRegistrosInventario($GrammerNo, $STLocation, $StBin, $StType, $
     return $respuesta;
 }
 
+
+include_once('connection.php');
+
+function actualizarInventario() {
+    $conex = null; // Inicializar la variable para evitar errores en el catch
+    try {
+        $con = new LocalConector();
+        $conex = $con->conectar();
+
+        // Iniciar transacción
+        $conex->begin_transaction();
+
+        // Obtener la suma de su.Cantidad agrupada por las llaves primarias de InventarioSap
+        $querySum = "
+            SELECT s.Storage_Bin, s.Storage_Type, s.Numero_Parte, SUM(s.Cantidad) AS totalCantidad 
+            FROM Storage_Unit s 
+            JOIN InventarioSap i 
+                ON s.Numero_Parte = i.GrammerNo 
+                AND s.Storage_Bin = i.STBin 
+                AND s.Storage_Type = i.STType 
+            GROUP BY s.Storage_Bin, s.Storage_Type, s.Numero_Parte;
+        ";
+
+        $resultSum = $conex->query($querySum);
+
+        if (!$resultSum) {
+            throw new Exception("Error al calcular la suma: " . $conex->error);
+        }
+
+        // Actualizar los valores en InventarioSap
+        $updateQuery = "
+            UPDATE InventarioSap i
+            JOIN (
+                $querySum
+            ) AS suSummary
+            ON 
+                i.STBin = suSummary.Storage_Bin 
+                AND i.STType = suSummary.Storage_Type 
+                AND i.GrammerNo = suSummary.Numero_Parte
+            SET 
+                i.Cantidad = suSummary.totalCantidad
+        ";
+
+        if (!$conex->query($updateQuery)) {
+            throw new Exception("Error al actualizar InventarioSap: " . $conex->error);
+        }
+
+        // Confirmar la transacción
+        $conex->commit();
+        $respuesta = array('status' => 'success', 'message' => "Los valores se actualizaron correctamente.");
+    } catch (Exception $e) {
+        if ($conex && $conex->errno) { // Verificar si $conex está definido y conectado
+            $conex->rollback();
+        }
+        $respuesta = array('status' => 'error', 'message' => "Error: " . $e->getMessage());
+    }
+
+    return $respuesta;
+}
+
+
+/*
+ * SELECT DEL UPDATE
+ *
+ * SELECT
+    i.STBin,
+    i.STType,
+    i.GrammerNo,
+    suSummary.totalCantidad
+FROM
+    InventarioSap i
+JOIN (
+    SELECT
+        s.Storage_Bin,
+        s.Storage_Type,
+        s.Numero_Parte,
+        SUM(s.Cantidad) AS totalCantidad
+    FROM
+        Storage_Unit s
+    JOIN
+        InventarioSap i
+    ON
+        s.Numero_Parte = i.GrammerNo
+        AND s.Storage_Bin = i.STBin
+        AND s.Storage_Type = i.STType
+    GROUP BY
+        s.Storage_Bin, s.Storage_Type, s.Numero_Parte
+) AS suSummary
+ON
+    i.STBin = suSummary.Storage_Bin
+    AND i.STType = suSummary.Storage_Type
+    AND i.GrammerNo = suSummary.Numero_Parte;
+
+ */
+
+
 ?>
