@@ -294,9 +294,9 @@
     document.getElementById("tooltipUbicaciones").addEventListener("click", function() {
         mostrarImagenTooltip(
             "tooltipUbicaciones",
-            "https://grammermx.com/excelInventario/imgs/area.png",
+            "https://grammermx.com/excelInventario/imgs/ubicaciones.png",
             320,
-            120
+            150
         );
     });
 
