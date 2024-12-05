@@ -32,10 +32,10 @@ document.getElementById('fileInputExcelQty').addEventListener('change', async (e
     }
 });
 
-
 async function manejarExcelQty(file) {
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(await file.arrayBuffer());
+    const data = await file.arrayBuffer();
+    await workbook.xlsx.load(data);
 
     const worksheet = workbook.getWorksheet(1); // Primera hoja
     const ExcelQtyData = [];
@@ -78,7 +78,6 @@ async function buscarValoresEnBaseDeDatos(datos) {
 }
 
 async function actualizarExcelQty(file, dataFromBackend) {
-    const ExcelJS = await import('exceljs');
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(await file.arrayBuffer());
 
