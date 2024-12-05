@@ -77,9 +77,9 @@ async function buscarValoresEnBaseDeDatos(datos) {
     }
 }
 async function actualizarExcelQty(file, dataFromBackend) {
-    const ExcelJS = require('exceljs');// Importar la librería de ExcelJS
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(await file.arrayBuffer());
+    const data = await file.arrayBuffer();  // Leemos el archivo
+    await workbook.xlsx.load(data);  // Cargamos el archivo Excel en el workbook
 
     const worksheet = workbook.getWorksheet(1); // Suponiendo que trabajas con la primera hoja
 
@@ -109,6 +109,7 @@ async function actualizarExcelQty(file, dataFromBackend) {
     a.download = `Actualizado_${file.name}`; // Nombre del archivo descargado
     a.click();
 }
+
 
 
 
