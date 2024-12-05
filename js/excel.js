@@ -114,8 +114,8 @@ async function actualizarExcelQty(file, dataFromBackend) {
                 console.log(`Actualizando columnas L y M con: storageUnit = ${matchingData.storageUnit}, cantidad = ${matchingData.cantidad}`);
 
                 // Si hay coincidencia, actualizamos las celdas correspondientes
-                row.getCell(12).value = matchingData.storageUnit;  // Columna L - storageUnit
                 row.getCell(13).value = matchingData.cantidad;     // Columna M - cantidad
+                row.getCell(14).value = matchingData.unit;  // Columna N - unit
             } else {
                 console.log(`No se encontró coincidencia para storageBin: ${storageBin}, materialNo: ${materialNo}, storageUnit: ${storageUnit}`);
             }
