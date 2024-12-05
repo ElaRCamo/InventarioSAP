@@ -30,6 +30,20 @@
 <body>
 <main>
 
+    <section class="tabla-section" id="sectionExcelQty">
+        <div class=""></div>
+        <div class="container">
+            <div class="row">
+                <div class="container mt-5">
+                    <h2 class="text-center">Actualizar Counted Qty en excel</h2>
+                    <button class="btn btn-success text-right btnExcel" id="btnExcelExcelQty"> Subir Excel</button>
+                    <input type="file" id="fileInputExcelQty" accept=".xlsx, .xls" style="display: none;" />
+                    <button class="btn btn-secondary text-right btnExcel" id="tooltiExcelQty"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="tabla-section" id="sectionInvenStor">
         <div class=""></div>
         <div class="container">
@@ -255,6 +269,17 @@
 
     });
 
+    document.getElementById("tooltiExcelQty").addEventListener("click", function() {
+        mostrarImagenTooltip(
+            "tooltiExcelQty",
+            "https://grammermx.com/excelInventario/imgs/ExcelQty.png",
+            320,
+            120
+        );
+    });
+
+
+
     document.getElementById("tooltiInvenStor").addEventListener("click", function() {
         mostrarImagenTooltip(
             "tooltiInvenStor",
@@ -326,6 +351,8 @@
             120
         );
     });
+
+
 </script>
 
 <!-- -Archivos de jQuery-->

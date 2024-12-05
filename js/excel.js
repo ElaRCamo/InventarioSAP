@@ -1,4 +1,106 @@
 /**********************************************************************************************************************/
+/********************************************EXCEL QTY*****************************************************************/
+/**********************************************************************************************************************/
+document.getElementById('btnExcelInventario').addEventListener('click', () => {
+    document.getElementById('fileInputExcelQty').click();
+});
+
+document.getElementById('fileInputExcelQty').addEventListener('change', async (event) => {
+    const file = event.target.files[0]; // El archivo seleccionado
+    console.log("Archivo seleccionado:", file); // Verifica el archivo seleccionado
+
+    if (file) {
+        try {
+            // Paso 1: Procesar el archivo Excel
+            const dataToBackend = await manejarExcelQty(file);
+
+            // Paso 2: Consultar el backend con los datos extraídos
+            const dataFromBackend = await buscarValoresEnBaseDeDatos(dataToBackend);
+
+            // Paso 3: Actualizar el archivo Excel solo si hay datos del backend
+            if (dataFromBackend.length > 0) {
+                await actualizarExcelQty(file, dataFromBackend);
+                console.log("Archivo Excel actualizado y descargado.");
+            } else {
+                console.error("No se recibieron datos válidos del backend.");
+            }
+        } catch (error) {
+            console.error("Ocurrió un error durante el proceso:", error);
+        }
+    } else {
+        console.error("No se seleccionó ningún archivo.");
+    }
+});
+
+
+async function manejarExcelQty(file) {
+    const ExcelJS = await import('exceljs'); // Asegúrate de incluir ExcelJS en tu proyecto.
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(await file.arrayBuffer());
+
+    const worksheet = workbook.getWorksheet(1); // Suponiendo que estás trabajando con la primera hoja.
+    const ExcelQtyData = [];
+
+    worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber > 1) { // Omitir encabezados
+            const registro = {
+                storageBin: row.getCell(7).value || "", // Columna G
+                noParte: row.getCell(9).value || "", // Columna I
+                storageUnit: row.getCell(12).value || "" // Columna L
+            };
+            ExcelQtyData.push(registro);
+        }
+    });
+
+    return ExcelQtyData;
+}
+async function buscarValoresEnBaseDeDatos(datos) {
+    try {
+        const response = await fetch('dao/daoActualizarExcelQty.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(datos),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error al consultar el backend: ${response.statusText}`);
+        }
+
+        // El backend devuelve un array con las columnas adicionales (M y N)
+        const resultados = await response.json();
+        return resultados;
+    } catch (error) {
+        console.error("Error en la consulta al backend:", error);
+        return [];
+    }
+}
+
+async function actualizarExcelQty(file, dataFromBackend) {
+    const ExcelJS = await import('exceljs');
+    const workbook = new ExcelJS.Workbook();
+    await workbook.xlsx.load(await file.arrayBuffer());
+
+    const worksheet = workbook.getWorksheet(1); // Suponiendo que trabajas con la primera hoja.
+
+    // Recorre los datos y actualiza las columnas M y N
+    dataFromBackend.forEach((registro, index) => {
+        const rowNumber = index + 2; // Asumiendo que la primera fila son encabezados.
+        worksheet.getRow(rowNumber).getCell(13).value = registro.additionalColumn1; // Columna M
+        worksheet.getRow(rowNumber).getCell(14).value = registro.additionalColumn2; // Columna N
+    });
+
+    // Guarda el archivo actualizado
+    const blob = await workbook.xlsx.writeBuffer();
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([blob]));
+    a.download = `Actualizado_${file.name}`;
+    a.click();
+}
+
+
+/**********************************************************************************************************************/
 /********************************************EXCEL INVENTARIO - STORAGE************************************************/
 /**********************************************************************************************************************/
 

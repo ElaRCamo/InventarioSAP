@@ -144,25 +144,6 @@ document.getElementById('btnTxtStorage').addEventListener('click', () => {
     document.getElementById('fileInputTxtS').click();
 });
 
-document.getElementById('fileInputTxtS').addEventListener('change', async (event) => {
-    const file = event.target.files[0]; // El archivo seleccionado
-    console.log("Archivo seleccionado:", file);  // Verifica el archivo seleccionado
-
-    if (file) {
-        // Procesar el archivo y enviar los datos al backend
-        const dataToBackend = await manejarArchivoStorage(file);
-        const dataFromBackend = await enviarDatosAlBackendStorage(dataToBackend);
-
-        if (dataFromBackend.length > 0) {
-            // Solo actualiza si dataFromBackend tiene datos
-            actualizarArchivoStorage(file, dataFromBackend);
-        } else {
-            console.error("No se recibieron datos válidos del backend.");
-        }
-    } else {
-        console.error("No se seleccionó ningún archivo.");
-    }
-});
 
 async function manejarArchivoStorage(file) {
     const reader = new FileReader();
