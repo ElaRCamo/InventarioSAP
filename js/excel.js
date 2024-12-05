@@ -81,6 +81,8 @@ async function actualizarExcelQty(file, dataFromBackend) {
     const data = await file.arrayBuffer();  // Leemos el archivo
     await workbook.xlsx.load(data);  // Cargamos el archivo Excel en el workbook
 
+    console.log("Archivo Excel cargado correctamente.");
+
     const worksheet = workbook.getWorksheet(1); // Suponiendo que trabajas con la primera hoja
 
     // Recorremos las filas del Excel, excluyendo el encabezado
@@ -89,26 +91,38 @@ async function actualizarExcelQty(file, dataFromBackend) {
             const storageBin = row.getCell(7).value; // Columna G es storageBin
             const materialNo = row.getCell(9).value;  // Columna I es materialNo
 
+            console.log(`Procesando fila ${rowNumber}: storageBin = ${storageBin}, materialNo = ${materialNo}`);
+
             // Buscar coincidencia en los datos del backend
             const matchingData = dataFromBackend.find(
                 (item) => item.storageBin === storageBin && item.noParte === materialNo
             );
 
             if (matchingData) {
+                console.log(`Coincidencia encontrada para storageBin: ${storageBin}, materialNo: ${materialNo}`);
+                console.log(`Actualizando columnas L y M con: storageUnit = ${matchingData.storageUnit}, cantidad = ${matchingData.cantidad}`);
+
                 // Si hay coincidencia, actualizamos las celdas correspondientes
                 row.getCell(12).value = matchingData.storageUnit;  // Columna L - storageUnit
                 row.getCell(13).value = matchingData.cantidad;     // Columna M - cantidad
+            } else {
+                console.log(`No se encontró coincidencia para storageBin: ${storageBin}, materialNo: ${materialNo}`);
             }
         }
     });
 
     // Guardar el archivo actualizado
     const blob = await workbook.xlsx.writeBuffer();
+    console.log("Archivo actualizado preparado para descarga.");
+
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([blob]));
     a.download = `Actualizado_${file.name}`; // Nombre del archivo descargado
     a.click();
+
+    console.log("Descarga del archivo iniciada.");
 }
+
 
 
 
