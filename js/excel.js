@@ -77,7 +77,7 @@ async function buscarValoresEnBaseDeDatos(datos) {
     }
 }
 async function actualizarExcelQty(file, dataFromBackend) {
-    const ExcelJS = await import('exceljs'); // Importar la librería de ExcelJS
+    const ExcelJS = require('exceljs');// Importar la librería de ExcelJS
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(await file.arrayBuffer());
 
