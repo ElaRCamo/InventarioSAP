@@ -77,36 +77,39 @@ async function buscarValoresEnBaseDeDatos(datos) {
     }
 }
 async function actualizarExcelQty(file, dataFromBackend) {
+    const ExcelJS = await import('exceljs'); // Importar la librería de ExcelJS
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(await file.arrayBuffer());
 
-    const worksheet = workbook.getWorksheet(1); // Suponiendo que trabajas con la primera hoja.
+    const worksheet = workbook.getWorksheet(1); // Suponiendo que trabajas con la primera hoja
 
-    // Asegúrate de que las filas y las celdas que estás actualizando coincidan
-    dataFromBackend.forEach((registro, index) => {
-        const rowNumber = index + 2; // Asumiendo que la primera fila son encabezados.
+    // Recorremos las filas del Excel, excluyendo el encabezado
+    worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber > 1) { // Excluir la primera fila (encabezados)
+            const storageBin = row.getCell(7).value; // Columna G es storageBin
+            const materialNo = row.getCell(9).value;  // Columna I es materialNo
 
-        // Verifica si la fila que estás actualizando tiene la columna de 'storageBin' que coincida
-        const row = worksheet.getRow(rowNumber);
-        if (row) {
-            const storageBin = row.getCell(7).value; // Columna G es la columna de 'storageBin'
-            const noParte = row.getCell(9).value;   // Columna I es la columna de 'noParte'
+            // Buscar coincidencia en los datos del backend
+            const matchingData = dataFromBackend.find(
+                (item) => item.storageBin === storageBin && item.noParte === materialNo
+            );
 
-            // Si el 'storageBin' y 'noParte' coinciden con los datos del backend, actualiza las celdas
-            if (storageBin === registro.storageBin && noParte === registro.noParte) {
-                row.getCell(12).value = registro.storageUnit; // Columna L - storageUnit
-                row.getCell(13).value = registro.cantidad;    // Columna M - cantidad
+            if (matchingData) {
+                // Si hay coincidencia, actualizamos las celdas correspondientes
+                row.getCell(12).value = matchingData.storageUnit;  // Columna L - storageUnit
+                row.getCell(13).value = matchingData.cantidad;     // Columna M - cantidad
             }
         }
     });
 
-    // Guarda el archivo actualizado
+    // Guardar el archivo actualizado
     const blob = await workbook.xlsx.writeBuffer();
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([blob]));
-    a.download = `Actualizado_${file.name}`;
+    a.download = `Actualizado_${file.name}`; // Nombre del archivo descargado
     a.click();
 }
+
 
 
 /**********************************************************************************************************************/
