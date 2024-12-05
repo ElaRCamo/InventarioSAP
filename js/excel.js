@@ -76,18 +76,28 @@ async function buscarValoresEnBaseDeDatos(datos) {
         return [];
     }
 }
-
 async function actualizarExcelQty(file, dataFromBackend) {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(await file.arrayBuffer());
 
     const worksheet = workbook.getWorksheet(1); // Suponiendo que trabajas con la primera hoja.
 
-    // Recorre los datos y actualiza las columnas M y N
+    // Asegúrate de que las filas y las celdas que estás actualizando coincidan
     dataFromBackend.forEach((registro, index) => {
         const rowNumber = index + 2; // Asumiendo que la primera fila son encabezados.
-        worksheet.getRow(rowNumber).getCell(13).value = registro.additionalColumn1; // Columna M
-        worksheet.getRow(rowNumber).getCell(14).value = registro.additionalColumn2; // Columna N
+
+        // Verifica si la fila que estás actualizando tiene la columna de 'storageBin' que coincida
+        const row = worksheet.getRow(rowNumber);
+        if (row) {
+            const storageBin = row.getCell(7).value; // Columna G es la columna de 'storageBin'
+            const noParte = row.getCell(9).value;   // Columna I es la columna de 'noParte'
+
+            // Si el 'storageBin' y 'noParte' coinciden con los datos del backend, actualiza las celdas
+            if (storageBin === registro.storageBin && noParte === registro.noParte) {
+                row.getCell(12).value = registro.storageUnit; // Columna L - storageUnit
+                row.getCell(13).value = registro.cantidad;    // Columna M - cantidad
+            }
+        }
     });
 
     // Guarda el archivo actualizado
