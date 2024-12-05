@@ -88,25 +88,36 @@ async function actualizarExcelQty(file, dataFromBackend) {
     // Recorremos las filas del Excel, excluyendo el encabezado
     worksheet.eachRow((row, rowNumber) => {
         if (rowNumber > 1) { // Excluir la primera fila (encabezados)
-            const storageBin = row.getCell(7).value; // Columna G es storageBin
-            const materialNo = row.getCell(9).value;  // Columna I es materialNo
+            const storageBin = row.getCell(7).value?.toString().trim(); // Columna G es storageBin
+            const materialNo = row.getCell(9).value?.toString().trim();  // Columna I es materialNo
+            const storageUnit = row.getCell(12).value?.toString().trim();  // Columna L es storageUnit
 
-            console.log(`Procesando fila ${rowNumber}: storageBin = ${storageBin}, materialNo = ${materialNo}`);
+            console.log(`Procesando fila ${rowNumber}: storageBin = ${storageBin}, materialNo = ${materialNo}, storageUnit = ${storageUnit}`);
 
-            // Buscar coincidencia en los datos del backend
-            const matchingData = dataFromBackend.find(
-                (item) => item.storageBin === storageBin && item.noParte === materialNo
-            );
+            // Realizar la distinción por storageUnit
+            let matchingData;
+            if (storageUnit && storageUnit !== '') {
+                console.log(`Buscando por storageUnit: ${storageUnit}`);
+                matchingData = dataFromBackend.find(
+                    (item) => item.storageUnit === storageUnit
+                );
+            } else {
+                console.log(`Buscando por storageBin: ${storageBin}, materialNo: ${materialNo}`);
+                // Buscar coincidencia en los datos del backend por storageBin y materialNo
+                matchingData = dataFromBackend.find(
+                    (item) => item.storageBin === storageBin && item.noParte === materialNo
+                );
+            }
 
             if (matchingData) {
-                console.log(`Coincidencia encontrada para storageBin: ${storageBin}, materialNo: ${materialNo}`);
+                console.log(`Coincidencia encontrada: storageBin = ${storageBin}, materialNo = ${materialNo}`);
                 console.log(`Actualizando columnas L y M con: storageUnit = ${matchingData.storageUnit}, cantidad = ${matchingData.cantidad}`);
 
                 // Si hay coincidencia, actualizamos las celdas correspondientes
                 row.getCell(12).value = matchingData.storageUnit;  // Columna L - storageUnit
                 row.getCell(13).value = matchingData.cantidad;     // Columna M - cantidad
             } else {
-                console.log(`No se encontró coincidencia para storageBin: ${storageBin}, materialNo: ${materialNo}`);
+                console.log(`No se encontró coincidencia para storageBin: ${storageBin}, materialNo: ${materialNo}, storageUnit: ${storageUnit}`);
             }
         }
     });
