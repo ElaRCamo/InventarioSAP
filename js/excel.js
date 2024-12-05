@@ -34,11 +34,10 @@ document.getElementById('fileInputExcelQty').addEventListener('change', async (e
 
 
 async function manejarExcelQty(file) {
-    const ExcelJS = await import('exceljs'); // Asegúrate de incluir ExcelJS en tu proyecto.
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(await file.arrayBuffer());
 
-    const worksheet = workbook.getWorksheet(1); // Suponiendo que estás trabajando con la primera hoja.
+    const worksheet = workbook.getWorksheet(1); // Primera hoja
     const ExcelQtyData = [];
 
     worksheet.eachRow((row, rowNumber) => {
@@ -54,6 +53,7 @@ async function manejarExcelQty(file) {
 
     return ExcelQtyData;
 }
+
 async function buscarValoresEnBaseDeDatos(datos) {
     try {
         const response = await fetch('dao/daoActualizarExcelQty.php', {
