@@ -7,6 +7,7 @@
     <link rel="icon" href="" type="image/x-icon">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link rel="icon" href="imgs/Grammer_Logo.ico" type="image/x-icon">
 
     <title>Administrar</title>
 
@@ -205,8 +206,6 @@
         </div>
     </section>
 
-
-
     <section class="tabla-section" id="sectionBin">
         <div class=""></div>
         <div class="container">
@@ -277,8 +276,6 @@
             120
         );
     });
-
-
 
     document.getElementById("tooltiInvenStor").addEventListener("click", function() {
         mostrarImagenTooltip(
