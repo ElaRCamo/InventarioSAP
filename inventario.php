@@ -97,8 +97,8 @@
                     <input type="file" id="fileInputStorage" accept=".xlsx, .xls" style="display: none;" />
                     <button class="btn btn-secondary text-right btnExcel" id="tooltipStorage"><i class="far fa-question-circle position-absolute"></i>? Ejemplo excel</button>
 
-                    <button class="btn btn-primary text-right btnExcel" id="btnTxtStorage"> Actualizar txt </button>
-                    <input type="file" id="fileInputTxtS" accept=".txt" style="display: none;" />
+                    <button class="btn btn-primary text-right" id="btnTxtStorage">Actualizar txt</button>
+                    <input type="file" id="fileInputTxtS" accept=".txt" style="display: none;" multiple />
 
                     <table class="table table-striped table-bordered mt-3" id="tablaStorage">
                         <thead>

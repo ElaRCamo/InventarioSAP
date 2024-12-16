@@ -259,7 +259,7 @@ async function enviarDatosAlBackend(data) {
 /**********************************************************************************************************************/
 /*****************************************************TABLA STORAGE_UNIT***********************************************/
 /**********************************************************************************************************************/
-
+/*
 document.getElementById('btnTxtStorage').addEventListener('click', () => {
     document.getElementById('fileInputTxtS').click();
 });
@@ -283,6 +283,37 @@ document.getElementById('fileInputTxtS').addEventListener('change', async (event
         console.error("No se seleccionó ningún archivo.");
     }
 });
+*/
+document.getElementById('btnTxtStorage').addEventListener('click', () => {
+    document.getElementById('fileInputTxtS').click();
+});
+
+document.getElementById('fileInputTxtS').addEventListener('change', async (event) => {
+    const files = Array.from(event.target.files); // Todos los archivos seleccionados
+    console.log("Archivos seleccionados:", files); // Verificar los archivos
+
+    for (const file of files) {
+        console.log("Procesando archivo:", file.name);
+
+        if (file) {
+            try {
+                const dataToBackend = await manejarArchivoStorage(file);
+                const dataFromBackend = await enviarDatosAlBackendStorage(dataToBackend);
+
+                if (dataFromBackend.length > 0) {
+                    actualizarArchivoStorage(file, dataFromBackend);
+                } else {
+                    console.error(`No se recibieron datos válidos del backend para ${file.name}.`);
+                }
+            } catch (error) {
+                console.error(`Error procesando el archivo ${file.name}:`, error);
+            }
+        } else {
+            console.error(`No se seleccionó ningún archivo.`);
+        }
+    }
+});
+
 
 async function manejarArchivoStorage(file) {
     const reader = new FileReader();
