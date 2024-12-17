@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             } else {
                 // Llamar a la función de inserción
                 $respuestaInsert = insertarRegistrosUbicaciones($GrammerNo, $PVB);
-                if ($respuestaInsert['status'] !== 'success') {
+                if ($respuestaInsert['status'] === 'error') {
                     $errores[] = "Error al insertar el registro GrammerNo: $GrammerNo. " . $respuestaInsert['message'];
                     $todosExitosos = false;
                     break;  // Salir del ciclo si ocurre un error
