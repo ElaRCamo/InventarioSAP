@@ -33,7 +33,7 @@ foreach ($data as $record) {
 
     // Consulta de cantidad
     $consQ = ($storageUnit != null && $storageUnit != "")
-        ? "SELECT Cantidad FROM Storage_Unit WHERE Id_StorageUnit = '$storageUnit'"
+        ? "SELECT Cantidad FROM Storage_Unit WHERE Id_StorageUnit = '$storageUnit' AND Estatus = 1"
         : "SELECT 
                 CASE
                     WHEN (SegundoConteo IS NULL OR SegundoConteo = 0) 
@@ -47,7 +47,8 @@ foreach ($data as $record) {
                 END AS Cantidad
            FROM Bitacora_Inventario
            WHERE StorageBin = '$storageBin' 
-             AND NumeroParte = '$noParte'";
+             AND NumeroParte = '$noParte'
+             AND Estatus = 1";
 
     $rsconsQty = mysqli_query($conexion, $consQ);
 
